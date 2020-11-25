@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+</head>
+<body style="text-align: center; margin-top: 100px;">
+	<div th:if="${master}"><h1>Usuário Master</h1></div>
+	<div th:if="${administrator}"><h1>Usuário Administrador</h1></div>
+	<div th:if="${!master && !administrator}"><h1>Holerite</h1></div>
+	<br />
+	<br />
+	<form method="post" th:action="@{/master/holerite/visualizar}">
+		<label for="idfunc">IDFUNC</label><br />
+		<input id="idfunc" type="text" name="idFunc">
+		<br /><br />
+		<label for="mes">MES</label><br />
+		<input id="mes" type="text" name="mes">
+		<br /><br />
+		<label for="ano">ANO</label><br />
+		<input id="ano" type="text" name="ano">
+		<br /><br />
+		<input type="submit" value="Ver Holerite">
+	</form>
+</body>
+</html>

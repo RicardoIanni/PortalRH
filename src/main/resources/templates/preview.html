@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Holerite</title>
+</head>
+<body>
+<center><table border="1">
+	<tr>
+		<th>IDFUNC</th>
+		<td th:text="${holerite.getIdFunc.toString()}"></td>
+		<th>NOME</th>
+		<td th:text="${holerite.nome}"></td>
+	</tr>
+	<tr>
+		<th>CTPS</th>
+		<td th:text="${holerite.ctps}"></td>
+		<th>SERIE</th>
+		<td th:text="${holerite.serieCTPS}"></td>
+	</tr>
+	<tr>
+		<th>PIS/PASEP</th>
+		<td th:text="${holerite.pis_pasep}"></td>
+		<th>CPF</th>
+		<td th:text="${holerite.cpf}"></td>
+	</tr>
+	<tr>
+		<th>ADMISSAO</th>
+		<td th:text="${holerite.getDataAdmissao.toString()}"></td>
+		<th>CONTRATO</th>
+		<td th:text="${holerite.contrato}"></td>
+	</tr>
+	<tr>
+		<th>CNPJ</th>
+		<td th:text="${holerite.empresaHolerite.cnpj}"></td>
+		<th>RAZAO SOCIAL</th>
+		<td th:text="${holerite.empresaHolerite.razaoSocial}"></td>
+	</tr>
+	<tr>
+		<th>ENDERECO</th>
+		<td th:text="${holerite.enderecoHolerite.logradouro}"></td>
+		<th>NUMERO</th>
+		<td th:text="${holerite.enderecoHolerite.numero}"></td>
+	</tr>
+	<tr>
+		<th>COMPLEMENTO</th>
+		<td th:text="${holerite.enderecoHolerite.complemento}"></td>
+		<th>BAIRRO</th>
+		<td th:text="${holerite.enderecoHolerite.bairro}"></td>
+	</tr>
+	<tr>
+		<th>CIDADE</th>
+		<td th:text="${holerite.enderecoHolerite.cidadeEndereco.nomeCidade}"></td>
+		<th>ESTADO</th>
+		<td th:text="${holerite.enderecoHolerite.cidadeEndereco.estadoCidade.sigla}"></td>
+	</tr>
+	<tr>
+		<th>FUNCAO</th>
+		<td th:text="${holerite.funcao}"></td>
+		<th>CBO</th>
+		<td th:text="${holerite.cbo}"></td>
+	</tr>
+	<tr>
+		<th>DEPARTAMENTO</th>
+		<td th:text="${holerite.departamento}"></td>
+		<th>MES/ANO</th>
+		<td th:text="${holerite.mes + '/' + holerite.ano}"></td>
+	</tr>
+	<tr>
+		<th>TOTAL VENCIMENTO</th>
+		<td th:text="${holerite.getTotalVencimento.toString()}"></td>
+		<th>TOTAL DESCONTO</th>
+		<td th:text="${holerite.getTotalDesconto.toString()}"></td>
+	</tr>
+	<tr>
+		<th>SALARIO LIQUIDO</th>
+		<td th:text="${holerite.getSalarioLisquido.toString()}"></td>
+		<th>SALARIO BASE</th>
+		<td th:text="${holerite.getSalarioBase.toString()}"></td>
+	</tr>
+	<tr>
+		<th>BASE INSS</th>
+		<td th:text="${holerite.getSalarioINSS.toString()}"></td>
+		<th></th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>BASE FGTS</th>
+		<td th:text="${holerite.getSalarioFGTS.toString()}"></td>
+		<th>FGTS MES</th>
+		<td th:text="${holerite.getFgtsMes.toString()}"></td>
+	</tr>
+	<tr>
+		<th>BASE IRRF</th>
+		<td th:text="${holerite.getSalarioIRRF.toString()}"></td>
+		<th>FAIXA IRRF</th>
+		<td th:text="${holerite.getFaixaIRRF.toString()}"></td>
+	</tr>
+	<div th:if="${holerite.vencimentos.size() > 0}">
+	<tr>
+		<th colspan="4">VENCIMENTOS</th>
+	</tr>
+	<tr>
+		<th>CLASSE</th>
+		<th>EVENTO</th>
+		<th>REFERENCIA</th>
+		<th>VALOR</th>
+	</tr>
+	<tr th:each="vencimento : ${holerite.vencimentos}">
+		<td th:text="${vencimento.classe}"></td>
+		<td th:text="${vencimento.descricao}"></td>
+		<td th:text="${vencimento.referencia}"></td>
+		<td th:text="${vencimento.valor.toString()}"></td>
+	</tr>
+	</div>
+	<div th:if="${holerite.descontos.size() > 0}">
+	<tr>
+		<th colspan="4">DESCONTOS</th>
+	</tr>
+	<tr>
+		<th>CLASSE</th>
+		<th>EVENTO</th>
+		<th>REFERENCIA</th>
+		<th>VALOR</th>
+	</tr>
+	<tr th:each="desconto : ${holerite.descontos}">
+		<td th:text="${desconto.classe}"></td>
+		<td th:text="${desconto.descricao}"></td>
+		<td th:text="${desconto.referencia}"></td>
+		<td th:text="${desconto.valor.toString()}"></td>
+	</tr>
+	</div>
+</table></center>
+</body>
+</html>
