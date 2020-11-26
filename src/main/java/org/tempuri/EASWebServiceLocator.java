@@ -17,11 +17,11 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.EngineConfiguration;
-import org.apache.axis.client.Service;
+//import org.apache.axis.client.Service;
 import org.apache.axis.client.Stub;
 
 @SuppressWarnings("serial")
-public class EASWebServiceLocator extends Service implements EASWebService {
+public class EASWebServiceLocator extends org.apache.axis.client.Service implements EASWebService {
 
     public EASWebServiceLocator() {
     	

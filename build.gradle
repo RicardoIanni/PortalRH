@@ -29,10 +29,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	compileOnly 'org.projectlombok:lombok'
+	implementation 'com.github.librepdf:openpdf:1.3.23'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
-	compileOnly fileTree('/mnt/sdb5/home/ricardo/Documents/Workspace/PortalRH/EASWebService/WebContent/WEB-INF/lib')
+	implementation fileTree('/mnt/sdb5/home/ricardo/Documents/Workspace/PortalRH/EASWebService/WebContent/WEB-INF/lib')
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}

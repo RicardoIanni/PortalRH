@@ -12,6 +12,7 @@ import br.com.ricardoianni.domain.endereco.Endereco;
 import br.com.ricardoianni.domain.endereco.EnderecoRepository;
 import br.com.ricardoianni.domain.endereco.Estado;
 import br.com.ricardoianni.domain.endereco.EstadoRepository;
+import br.com.ricardoianni.util.CollectionUtils;
 
 @Service
 public class EnderecoService {
@@ -120,11 +121,11 @@ public class EnderecoService {
 	}
 	
 	public List<Endereco> enderecoSearch(Cidade cidade) {
-		return List.of();
+		return CollectionUtils.listOf();
 	}
 	
 	public List<Endereco> enderecoSearch(Estado estado) {
-		return List.of();
+		return CollectionUtils.listOf();
 	}
 	
 	public List<Endereco> enderecoSearch(String logradouro, String numero, String complemento, String bairro, Cidade cidade) {
