@@ -75,7 +75,7 @@ public class HoleriteService {
 		
 		holerite.setTotalVencimento(XMLUtils.convertContextToBigDecimal(xmlDoc, "totalvenc"));
 		holerite.setTotalDesconto(XMLUtils.convertContextToBigDecimal(xmlDoc, "totaldesc"));
-		holerite.setSalarioLisquido(XMLUtils.convertContextToBigDecimal(xmlDoc, "liquidopgto"));
+		holerite.setSalarioLiquido(XMLUtils.convertContextToBigDecimal(xmlDoc, "liquidopgto"));
 		holerite.setSalarioBase(XMLUtils.convertContextToBigDecimal(xmlDoc, "salariobase"));
 		holerite.setSalarioINSS(XMLUtils.convertContextToBigDecimal(xmlDoc, "salarioinss"));
 		holerite.setSalarioFGTS(XMLUtils.convertContextToBigDecimal(xmlDoc, "basefgts"));

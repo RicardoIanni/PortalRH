@@ -74,7 +74,7 @@
 	</tr>
 	<tr>
 		<th>SALARIO LIQUIDO</th>
-		<td th:text="${holerite.getSalarioLisquido.toString()}"></td>
+		<td th:text="${holerite.getSalarioLiquido.toString()}"></td>
 		<th>SALARIO BASE</th>
 		<td th:text="${holerite.getSalarioBase.toString()}"></td>
 	</tr>
@@ -130,6 +130,12 @@
 		<td th:text="${desconto.valor.toString()}"></td>
 	</tr>
 	</div>
-</table></center>
+</table>
+<form method="post" th:action="@{/pdf/download}">
+	<input type="hidden" name="idFunc" th:value="${holerite.getIdFunc.toString()}">
+	<input type="hidden" name="mes" th:value="${holerite.mes}">
+	<input type="hidden" name="ano" th:value="${holerite.ano}">
+	<input type="submit" value="PDF">
+</form></center>
 </body>
 </html>

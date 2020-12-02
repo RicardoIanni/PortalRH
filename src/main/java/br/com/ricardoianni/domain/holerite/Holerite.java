@@ -3,8 +3,10 @@ package br.com.ricardoianni.domain.holerite;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,6 +52,12 @@ public class Holerite implements Serializable {
 	
 	private LocalDate dataAdmissao;
 	
+	public String getDataAdmissaoFormated() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("pt", "BR"));
+		
+		return dataAdmissao.format(formatter);
+	}
+	
 	private String contrato;
 	
 	private String funcao;
@@ -62,7 +70,7 @@ public class Holerite implements Serializable {
 	
 	private BigDecimal totalDesconto;
 	
-	private BigDecimal salarioLisquido;
+	private BigDecimal salarioLiquido;
 	
 	private BigDecimal salarioBase;
 	
