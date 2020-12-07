@@ -17,8 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import br.com.ricardoianni.domain.empresa.Empresa;
-import br.com.ricardoianni.domain.endereco.Endereco;
+import br.com.ricardoianni.domain.address.Endereco;
+import br.com.ricardoianni.domain.company.Empresa;
+import br.com.ricardoianni.domain.employee.Colaborador;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,23 +33,10 @@ public class Holerite implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idholerite")
 	private Integer idHolerite;
-
-	@Column(name = "idfunc")
-	private String idFunc;
 	
 	private String mes;
 	
 	private String ano;
-	
-	private String nome;
-	
-	private String ctps;
-	
-	private String serieCTPS;
-	
-	private String pis_pasep;
-	
-	private String cpf;
 	
 	private LocalDate dataAdmissao;
 	
@@ -84,6 +72,10 @@ public class Holerite implements Serializable {
 	
 	private BigDecimal faixaIRRF;
 	
+	@ManyToOne
+	@JoinColumn(name = "idcolaborador")
+	private Colaborador colaboradorHolerite;
+
 	@ManyToOne
 	@JoinColumn(name = "idempresa")
 	private Empresa empresaHolerite;

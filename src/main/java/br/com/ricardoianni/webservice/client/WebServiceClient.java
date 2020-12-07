@@ -19,15 +19,14 @@ public class WebServiceClient {
 	
 	private String password;
 	
-	public void webServiceStart(String endPoint) {
+	public void webServiceStart(String endPoint) throws WebServiceClientException {
 		EASWebServiceLocator locator = new EASWebServiceLocator();
 		locator.setEASWebServiceSoapEndpointAddress(endPoint);
 		
 		try {
 			webService = locator.getEASWebServiceSoap();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new WebServiceClientException("Não foi possivel conectar ao WebService.");
 		}
 
 	}

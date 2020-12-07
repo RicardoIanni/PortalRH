@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import br.com.ricardoianni.domain.empresa.Empresa;
-import br.com.ricardoianni.domain.endereco.Cidade;
-import br.com.ricardoianni.domain.endereco.Endereco;
-import br.com.ricardoianni.domain.endereco.Estado;
+import br.com.ricardoianni.domain.address.Cidade;
+import br.com.ricardoianni.domain.address.Endereco;
+import br.com.ricardoianni.domain.address.Estado;
+import br.com.ricardoianni.domain.company.Empresa;
+import br.com.ricardoianni.domain.employee.Colaborador;
+import br.com.ricardoianni.domain.employee.ColaboradorRepository;
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleriteDesconto;
 import br.com.ricardoianni.domain.holerite.HoleriteDescontoRepository;
@@ -21,6 +23,7 @@ import br.com.ricardoianni.domain.holerite.HoleriteVencimento;
 import br.com.ricardoianni.domain.holerite.HoleriteVencimentoRepository;
 import br.com.ricardoianni.util.XMLUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClient;
+import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
 @Service
 public class HoleriteService {
@@ -35,19 +38,23 @@ public class HoleriteService {
 	private HoleriteDescontoRepository holeriteDescontoRepository;
 	
 	@Autowired
+	private ColaboradorRepository colaboradorRepository;
+	
+	@Autowired
 	private EmpresaService empresaService;
 	
 	@Autowired
 	private EnderecoService enderecoService;
 
-	public Holerite holeriteSearch(String idFunc, String mes, String ano) {
+	public Holerite holeriteSearch(Colaborador colaborador, String mes, String ano) {
 		
-		return holeriteRepository.findByIdFuncAndMesAndAno(idFunc, mes, ano);
+		return holeriteRepository.findByColaboradorHoleriteAndMesAndAno(colaborador, mes, ano);
 	}
 	
-	public Document holeriteCarregar(String idFunc, String mes, String ano) {
+	public Document holeriteCarregar(String idFunc, String mes, String ano) throws WebServiceClientException {
 		WebServiceClient webService = new WebServiceClient();
 		
+		//TODO: conectar conforme empresa do colaborador ativo ou escolhido
 		webService.setCostumerID("Desenv_R16");
 		webService.setUsername("hsolera");
 		webService.setPassword("59030732");
@@ -60,13 +67,9 @@ public class HoleriteService {
 	
 	public Holerite holeriteCriar(Document xmlDoc) {
 		Holerite holerite = new Holerite();
-
-		holerite.setIdFunc(XMLUtils.getTagValue(xmlDoc, "idfunc"));
-		holerite.setNome(XMLUtils.getTagValue(xmlDoc, "nome"));
-		holerite.setCtps(XMLUtils.getTagValue(xmlDoc, "ctps"));
-		holerite.setSerieCTPS(XMLUtils.getTagValue(xmlDoc, "ctps_serie"));
-		holerite.setPis_pasep(XMLUtils.getTagValue(xmlDoc, "pispasep"));
-		holerite.setCpf(XMLUtils.getTagValue(xmlDoc, "cpf"));
+		Colaborador colaborador = colaboradorRepository.findByIdFunc(XMLUtils.getTagValue(xmlDoc, "idfunc"));
+		
+		holerite.setColaboradorHolerite(colaborador);
 		holerite.setDataAdmissao(XMLUtils.convertContextToDate(xmlDoc, "dt_admissao"));
 		holerite.setContrato(XMLUtils.getTagValue(xmlDoc, "contrato"));
 		holerite.setFuncao(XMLUtils.getTagValue(xmlDoc, "funcao"));
@@ -182,25 +185,25 @@ public class HoleriteService {
 	
 	public void holeriteGravar(Holerite holerite) {
 		holeriteRepository.save(holerite);
-		
+
 		for (int i = 0; i < holerite.getVencimentos().size(); i++) {
 			holerite.getVencimentos().get(i).setHoleriteVencimento(holerite);
 			vencimentoGravar(holerite.getVencimentos().get(i));
 		}
-		
+
 		for (int i = 0; i < holerite.getDescontos().size(); i++) {
 			holerite.getDescontos().get(i).setHoleriteDesconto(holerite);
 			descontoGravar(holerite.getDescontos().get(i));
 		}
-		
+
 	}
 	
 	public void vencimentoGravar(HoleriteVencimento vencimento) {
 		holeriteVencimentoRepository.save(vencimento);
 	}
-	
+
 	public void descontoGravar(HoleriteDesconto desconto) {
 		holeriteDescontoRepository.save(desconto);
 	}
-	
+
 }

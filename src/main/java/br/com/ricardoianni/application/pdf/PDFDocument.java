@@ -1,10 +1,8 @@
 package br.com.ricardoianni.application.pdf;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -20,179 +18,117 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.ricardoianni.domain.holerite.Holerite;
-import br.com.ricardoianni.domain.holerite.HoleriteDesconto;
-import br.com.ricardoianni.domain.holerite.HoleriteVencimento;
+import br.com.ricardoianni.domain.holerite.HoleritePagamento;
 
 public class PDFDocument {
+	
+	private Holerite holerite;
 
-	public void createHoleritePDF(Holerite holerite, String filename) {
-		Document document = new Document();
-		String filePath = "/mnt/sdb5/home/ricardo/Documents/Workspace/PortalRH/portal/src/main/resources/static/";
-		
-		
-		try {
-			PdfWriter.getInstance(document, new FileOutputStream(filePath + filename));
-		} catch (DocumentException | FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		document.setMargins(20, 20, 30, 30);
-		document.open();
-		
-		String fontFamily = "helvetica";
-		
-		Font title = new Font();
-		title.setFamily(fontFamily);
-		title.setSize(14);
-		
-		Font standard = new Font();
-		standard.setFamily(fontFamily);
-		standard.setSize(8);
-		
-		Font bold = new Font(standard);
-		bold.setStyle("bold");
-		
-		Font bold10 = new Font();
-		bold10.setFamily(fontFamily);
-		bold10.setStyle("bold");
-		bold10.setSize(10);
-		
-		Color gray   = new Color(220, 220, 220);
-		Color silver = new Color(192, 192, 192);
-
-		PdfPCell cellGray = new PdfPCell();
-		cellGray.setBackgroundColor(gray);
-		
-		PdfPCell cellSilver = new PdfPCell();
-		cellSilver.setBackgroundColor(silver);
-		
-		PdfPTable principalTable   = new PdfPTable(1);
-		principalTable.setWidthPercentage(100);
-		
-		PdfPCell cellTitle = new PdfPCell(cellGray);
-		cellTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellTitle.setVerticalAlignment(Element.ALIGN_TOP);
-		cellTitle.setPhrase(new Phrase("Demostrativo Salarial", title));
-		cellTitle.setFixedHeight(20);
-		
-		PdfPCell cellSubtitle = new PdfPCell();
-		cellSubtitle.setVerticalAlignment(Element.ALIGN_TOP);
-		cellSubtitle.setFixedHeight(14);
-		
-		PdfPCell cellContent = new PdfPCell();
-		cellContent.setVerticalAlignment(Element.ALIGN_TOP);
-		cellContent.setFixedHeight(14);
-		
+	private Font title    = new Font(Font.HELVETICA, 14, Font.NORMAL);
+	private Font standard = new Font(Font.HELVETICA,  8, Font.NORMAL);
+	private Font bold     = new Font(Font.HELVETICA,  8, Font.BOLD);
+	private Font bold10   = new Font(Font.HELVETICA, 10, Font.BOLD);
+	
+	private Color gray   = new Color(220, 220, 220);
+	private Color silver = new Color(192, 192, 192);
+	
+	private PdfPCell cellGray   = new PdfPCell();
+	private PdfPCell cellSilver = new PdfPCell();
+	private PdfPCell cellSubtitle = new PdfPCell();
+	private PdfPCell cellContent = new PdfPCell();
+	
+	private PdfPTable dadosColaborador() {
 		int[] setColumnsDados = {15, 85};
-		int[] setColumnsContrato = {25, 25, 50};
-		int[] setColumns50 = {50, 50};
-		int[] setColPgto = {15, 40, 20, 25};
-		float[] setColTotal = {(float) 27.5,(float) 22.5,(float) 27.5,(float) 22.5};
-		float[] setColLiquido = {(float) 77.5,(float) 22.5};
-		float[] setColBase = {(float) 16.666, (float) 16.667, (float) 16.667, (float) 16.667, (float) 16.667, (float) 16.666};
 		
 		PdfPTable dadosColaborador = new PdfPTable(2);
 		dadosColaborador.setWidths(setColumnsDados);
 		
+		String empresa = holerite.getEmpresaHolerite().getRazaoSocial();
+		String departamento = holerite.getDepartamento();
+		String funcao = holerite.getFuncao();
+		
+		String endereco = holerite.getEnderecoHolerite().getLogradouro() + "," +
+						  holerite.getEnderecoHolerite().getNumero() + " - ";
+		
+		if (! holerite.getEnderecoHolerite().getComplemento().isEmpty()) {
+			  endereco += holerite.getEnderecoHolerite().getComplemento() + " - ";
+		}
+		
+		endereco += holerite.getEnderecoHolerite().getBairro() + " - " +
+					holerite.getEnderecoHolerite().getCidadeEndereco().getNomeCidade() + "/" +
+					holerite.getEnderecoHolerite().getCidadeEndereco().getEstadoCidade().getSigla();
+		
+		String nome = holerite.getColaboradorHolerite().getIdFunc().toString() + " - " +
+					  holerite.getColaboradorHolerite().getNome() + " - " +
+					  "CTPS: " + holerite.getColaboradorHolerite().getCtps() + " " +
+					  "PIS: "  + holerite.getColaboradorHolerite().getPisPasep() + " " +
+					  "CPF: "  + holerite.getColaboradorHolerite().getCpf();
+		
+
+		PdfPCell cellEmpresaTitle = new PdfPCell(cellSubtitle);
+		cellEmpresaTitle.setPhrase(new Phrase("Empresa", standard));
+		
+		PdfPCell cellEmpresa = new PdfPCell(cellContent);
+		cellEmpresa.setPhrase(new Phrase(empresa, bold));
+		
+		dadosColaborador.addCell(cellEmpresaTitle);
+		dadosColaborador.addCell(cellEmpresa);
+		
+		
+		PdfPCell cellEnderecoTitle = new PdfPCell(cellSubtitle);
+		cellEnderecoTitle.setPhrase(new Phrase("Endereço", standard));
+		
+		PdfPCell cellEndereco = new PdfPCell(cellContent);
+		cellEndereco.setPhrase(new Phrase(endereco, standard));
+		
+		dadosColaborador.addCell(cellEnderecoTitle);
+		dadosColaborador.addCell(cellEndereco);
+		
+		
+		PdfPCell cellNomeTitle = new PdfPCell(cellSubtitle);
+		cellNomeTitle.setPhrase(new Phrase("Nome", standard));
+		
+		PdfPCell cellNome = new PdfPCell(cellContent);
+		cellNome.setPhrase(new Phrase(nome, bold));
+		
+		dadosColaborador.addCell(cellNomeTitle);
+		dadosColaborador.addCell(cellNome);
+		
+		
+		PdfPCell cellDepartamentoTitle = new PdfPCell(cellSubtitle);
+		cellDepartamentoTitle.setPhrase(new Phrase("Departamento", standard));
+		
+		PdfPCell cellDepartamento = new PdfPCell(cellContent);
+		cellDepartamento.setPhrase(new Phrase(departamento, standard));
+		
+		dadosColaborador.addCell(cellDepartamentoTitle);
+		dadosColaborador.addCell(cellDepartamento);
+		
+		
+		PdfPCell cellFuncaoTitle = new PdfPCell(cellSubtitle);
+		cellFuncaoTitle.setPhrase(new Phrase("Função", standard));
+		
+		PdfPCell cellFuncao = new PdfPCell(cellContent);
+		cellFuncao.setPhrase(new Phrase(funcao, standard));
+		
+		dadosColaborador.addCell(cellFuncaoTitle);
+		dadosColaborador.addCell(cellFuncao);
+
+		return dadosColaborador;
+	}
+	
+	private PdfPTable dadosContrato() {
+		int[] setColumnsContrato = {25, 25, 50};
+		
 		PdfPTable dadosContrato = new PdfPTable(3);
 		dadosContrato.setWidths(setColumnsContrato);
-		
-		PdfPTable pagamentos = new PdfPTable(2);
-		pagamentos.setWidths(setColumns50);
-		
-		PdfPTable headerPagamentos = new PdfPTable(4);
-		headerPagamentos.setWidths(setColPgto);
-
-		PdfPTable vencimentos = new PdfPTable(4);
-		vencimentos.setWidths(setColPgto);
-		
-		PdfPTable descontos = new PdfPTable(4);
-		descontos.setWidths(setColPgto);
-
-		PdfPTable totalPagamentos = new PdfPTable(4);
-		totalPagamentos.setWidths(setColTotal);
-		
-		PdfPTable pagamentoLiquido = new PdfPTable(2);
-		pagamentoLiquido.setWidths(setColLiquido);
-		
-		PdfPTable baseImpostos = new PdfPTable(6);
-		baseImpostos.setWidths(setColBase);
-		
-		String empresa;
-		String endereco;
-		String nome;
-		String departamento;
-		String funcao;
-		String mesAno;
-		String dtAdmissao;
-		String contrato;
-		
-		empresa = holerite.getEmpresaHolerite().getRazaoSocial();
-		
-		endereco  = holerite.getEnderecoHolerite().getLogradouro() + ",";
-		endereco += holerite.getEnderecoHolerite().getNumero() + " - ";
-		if (! holerite.getEnderecoHolerite().getComplemento().isEmpty()) {
-			endereco += holerite.getEnderecoHolerite().getComplemento() + " - ";
-		}
-		endereco += holerite.getEnderecoHolerite().getBairro() + " - ";
-		endereco += holerite.getEnderecoHolerite().getCidadeEndereco().getNomeCidade() + "/";
-		endereco += holerite.getEnderecoHolerite().getCidadeEndereco().getEstadoCidade().getSigla();
-		
-		nome  = holerite.getIdFunc().toString() + " - ";
-		nome += holerite.getNome() + " - ";
-		nome += "CTPS: " + holerite.getCtps() + " ";
-		nome += "PIS: " + holerite.getPis_pasep() + " ";
-		nome += "CPF: " + holerite.getCpf();
-		
-		departamento = holerite.getDepartamento();
-		
-		funcao = holerite.getFuncao();
 		
 		String mes = Month.of(Integer.valueOf(holerite.getMes())).getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
 		mes = mes.substring(0, 1).toUpperCase() + mes.substring(1);
 		
-		mesAno = mes + "/" + holerite.getAno();
-		
-		dtAdmissao = "Data de Admissão: " + holerite.getDataAdmissaoFormated();
-		
-		contrato = "Contrato: " + holerite.getContrato();
-		
-		PdfPCell cellEmpresaTitle = new PdfPCell(cellSubtitle);
-		PdfPCell cellEmpresa = new PdfPCell(cellContent);
-		PdfPCell cellEnderecoTitle = new PdfPCell(cellSubtitle);
-		PdfPCell cellEndereco = new PdfPCell(cellContent);
-		PdfPCell cellNomeTitle = new PdfPCell(cellSubtitle);
-		PdfPCell cellNome = new PdfPCell(cellContent);
-		PdfPCell cellDepartamentoTitle = new PdfPCell(cellSubtitle);
-		PdfPCell cellDepartamento = new PdfPCell(cellContent);
-		PdfPCell cellFuncaoTitle = new PdfPCell(cellSubtitle);
-		PdfPCell cellFuncao = new PdfPCell(cellContent);
-
-		cellEmpresaTitle.setPhrase(new Phrase("Empresa", standard));
-		cellEmpresa.setPhrase(new Phrase(empresa, bold));
-		cellEnderecoTitle.setPhrase(new Phrase("Endereço", standard));
-		cellEndereco.setPhrase(new Phrase(endereco, standard));
-		cellNomeTitle.setPhrase(new Phrase("Nome", standard));
-		cellNome.setPhrase(new Phrase(nome, bold));
-		cellDepartamentoTitle.setPhrase(new Phrase("Departamento", standard));
-		cellDepartamento.setPhrase(new Phrase(departamento, standard));
-		cellFuncaoTitle.setPhrase(new Phrase("Função", standard));
-		cellFuncao.setPhrase(new Phrase(funcao, standard));
-		
-		dadosColaborador.addCell(cellEmpresaTitle);
-		dadosColaborador.addCell(cellEmpresa);
-		dadosColaborador.addCell(cellEnderecoTitle);
-		dadosColaborador.addCell(cellEndereco);
-		dadosColaborador.addCell(cellNomeTitle);
-		dadosColaborador.addCell(cellNome);
-		dadosColaborador.addCell(cellDepartamentoTitle);
-		dadosColaborador.addCell(cellDepartamento);
-		dadosColaborador.addCell(cellFuncaoTitle);
-		dadosColaborador.addCell(cellFuncao);
-		
-		PdfPCell cellColaborador = new PdfPCell(dadosColaborador);
-		cellColaborador.setUseBorderPadding(false);
+		String mesAno = mes + "/" + holerite.getAno();
+		String dtAdmissao = "Data de Admissão: " + holerite.getDataAdmissaoFormated();
+		String contrato = "Contrato: " + holerite.getContrato();
 		
 		PdfPCell cellMesAno = new PdfPCell();
 		cellMesAno.setBackgroundColor(gray);
@@ -215,21 +151,25 @@ public class PDFDocument {
 		dadosContrato.addCell(cellDtAdmissao);
 		dadosContrato.addCell(cellContrato);
 		
-		PdfPCell cellContratoLine = new PdfPCell(dadosContrato);
-		cellContrato.setUseBorderPadding(false);		
+		return dadosContrato;
+	}
+	
+	private PdfPTable pagamentos(List<HoleritePagamento> holeritePagamentos, String title) {
+		int[] setColPgto = {15, 40, 20, 25};
 		
-		PdfPCell cellTitleVencimentos = new PdfPCell(cellGray);
-		cellTitleVencimentos.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellTitleVencimentos.setVerticalAlignment(Element.ALIGN_TOP);
-		cellTitleVencimentos.setPhrase(new Phrase("Vencimentos", bold10));
-		cellTitleVencimentos.setFixedHeight(16);
-		
-		PdfPCell cellTitleDescontos = new PdfPCell(cellGray);
-		cellTitleDescontos.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellTitleDescontos.setVerticalAlignment(Element.ALIGN_TOP);
-		cellTitleDescontos.setPhrase(new Phrase("Descontos", bold10));
-		cellTitleVencimentos.setFixedHeight(16);
+		PdfPTable pagamentos = new PdfPTable(4);
+		pagamentos.setWidths(setColPgto);
 
+		PdfPCell cellTitle = new PdfPCell(cellGray);
+		cellTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cellTitle.setVerticalAlignment(Element.ALIGN_TOP);
+		cellTitle.setPhrase(new Phrase(title, bold10));
+		cellTitle.setFixedHeight(16);
+		cellTitle.setColspan(4);
+		
+		pagamentos.addCell(cellTitle);
+		
+		
 		PdfPCell cellHeader = new PdfPCell(cellGray);
 		cellHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
 		cellHeader.setFixedHeight(14);
@@ -243,133 +183,94 @@ public class PDFDocument {
 		PdfPCell cellValueHead = new PdfPCell(cellHeader);
 		cellValueHead.setPhrase(new Phrase("Valor", bold));
 		
-		headerPagamentos.addCell(cellCodeHead);
-		headerPagamentos.addCell(cellDescriptionHead);
-		headerPagamentos.addCell(cellReferenceHead);
-		headerPagamentos.addCell(cellValueHead);
+		pagamentos.addCell(cellCodeHead);
+		pagamentos.addCell(cellDescriptionHead);
+		pagamentos.addCell(cellReferenceHead);
+		pagamentos.addCell(cellValueHead);
 		
-		PdfPCell cellHeaderPagamentos = new PdfPCell(headerPagamentos);
-		cellHeaderPagamentos.setUseBorderPadding(false);
 		
-		PdfPCell cellCode = new PdfPCell();
+		PdfPCell cellRecords = new PdfPCell();
+		cellRecords.setFixedHeight(14);
+		cellRecords.setBorder(0);
+		
+		PdfPCell cellCode = new PdfPCell(cellRecords);
 		cellCode.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellCode.setFixedHeight(14);
-		cellCode.setBorder(0);
 		
-		PdfPCell cellDescription = new PdfPCell();
+		PdfPCell cellDescription = new PdfPCell(cellRecords);
 		cellDescription.setHorizontalAlignment(Element.ALIGN_LEFT);
-		cellDescription.setFixedHeight(14);
-		cellDescription.setBorder(0);
-
-		PdfPCell cellReference = new PdfPCell();
+		
+		PdfPCell cellReference = new PdfPCell(cellRecords);
 		cellReference.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellReference.setFixedHeight(14);
-		cellReference.setBorder(0);
-
-		PdfPCell cellValue = new PdfPCell();
+		
+		PdfPCell cellValue = new PdfPCell(cellRecords);
 		cellValue.setHorizontalAlignment(Element.ALIGN_RIGHT);
-		cellValue.setFixedHeight(14);
-		cellValue.setBorder(0);
 		
-		List<HoleriteVencimento> holeriteVencimentos = holerite.getVencimentos();
-		HoleriteVencimento holeriteVencimento;
+		HoleritePagamento holeritePagamento;
 		
-		for (int i = 0; i < holeriteVencimentos.size(); i++) {
-			holeriteVencimento = holeriteVencimentos.get(i);
+		for (int i = 0; i < holeritePagamentos.size(); i++) {
+			holeritePagamento = holeritePagamentos.get(i);
 			
-			cellCode.setPhrase(new Phrase(holeriteVencimento.getClasse(), standard));
-			cellDescription.setPhrase(new Phrase(holeriteVencimento.getDescricao(), standard));
-			cellReference.setPhrase(new Phrase(holeriteVencimento.getReferencia(), standard));
-			cellValue.setPhrase(new Phrase(holeriteVencimento.getValor().toString(), standard));
+			cellCode.setPhrase(new Phrase(holeritePagamento.getClasse(), standard));
+			cellDescription.setPhrase(new Phrase(holeritePagamento.getDescricao(), standard));
+			cellReference.setPhrase(new Phrase(holeritePagamento.getReferencia(), standard));
+			cellValue.setPhrase(new Phrase(holeritePagamento.getValor().toString(), standard));
 			
-			vencimentos.addCell(cellCode);
-			vencimentos.addCell(cellDescription);
-			vencimentos.addCell(cellReference);
-			vencimentos.addCell(cellValue);
+			pagamentos.addCell(cellCode);
+			pagamentos.addCell(cellDescription);
+			pagamentos.addCell(cellReference);
+			pagamentos.addCell(cellValue);
 			
 		}
 		
-		List<HoleriteDesconto> holeriteDescontos = holerite.getDescontos();
-		HoleriteDesconto holeriteDesconto;
+		return pagamentos;
+	}
+	
+	private PdfPTable totais() {
+		float[] setColTotal = {(float) 27.5,(float) 22.5,(float) 27.5,(float) 22.5};
 		
-		for (int i = 0; i < holeriteDescontos.size(); i++) {
-			holeriteDesconto = holeriteDescontos.get(i);
-			
-			cellCode.setPhrase(new Phrase(holeriteDesconto.getClasse(), standard));
-			cellDescription.setPhrase(new Phrase(holeriteDesconto.getDescricao(), standard));
-			cellReference.setPhrase(new Phrase(holeriteDesconto.getReferencia(), standard));
-			cellValue.setPhrase(new Phrase(holeriteDesconto.getValor().toString(), standard));
-			
-			descontos.addCell(cellCode);
-			descontos.addCell(cellDescription);
-			descontos.addCell(cellReference);
-			descontos.addCell(cellValue);
-			
-		}
+		PdfPTable totais = new PdfPTable(4);
+		totais.setWidths(setColTotal);
 		
-		PdfPCell cellVencimentos = new PdfPCell(vencimentos);
-		cellVencimentos.setUseBorderPadding(false);
-		cellVencimentos.setMinimumHeight(300);
+		PdfPCell cellHead = new PdfPCell(cellGray);
+		cellHead.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cellHead.setFixedHeight(16);
+				
+		PdfPCell cellValue = new PdfPCell(cellGray);
+		cellHead.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		cellHead.setFixedHeight(16);
+				
+		PdfPCell cellVencHead = new PdfPCell(cellHead);
+		cellVencHead.setPhrase(new Phrase("Total de Vencimentos", bold10));
+		PdfPCell cellVencValue = new PdfPCell(cellValue);
+		cellVencValue.setPhrase(new Phrase(holerite.getTotalVencimento().toString(), bold10));
 		
-		PdfPCell cellDescontos = new PdfPCell(descontos);
-		cellDescontos.setUseBorderPadding(false);
-		cellDescontos.setMinimumHeight(300);
+		PdfPCell cellDescHead = new PdfPCell(cellHead);
+		cellDescHead.setPhrase(new Phrase("Total de Descontos", bold10));
+		PdfPCell cellDescValue = new PdfPCell(cellValue);
+		cellDescValue.setPhrase(new Phrase(holerite.getTotalDesconto().toString(), bold10));
 		
-		pagamentos.addCell(cellTitleVencimentos);
-		pagamentos.addCell(cellTitleDescontos);
+		totais.addCell(cellVencHead);
+		totais.addCell(cellVencValue);
+		totais.addCell(cellDescHead);
+		totais.addCell(cellDescValue);
 		
-		pagamentos.addCell(cellHeaderPagamentos);
-		pagamentos.addCell(cellHeaderPagamentos);
-		
-		pagamentos.addCell(cellVencimentos);
-		pagamentos.addCell(cellDescontos);
-		
-		PdfPCell cellPagamentos = new PdfPCell(pagamentos);
-		cellPagamentos.setUseBorderPadding(false);
-		
-		PdfPCell cellTotVencHead = new PdfPCell(cellGray);
-		cellTotVencHead.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellTotVencHead.setPhrase(new Phrase("Total de Vencimentos", bold10));
-		cellTotVencHead.setFixedHeight(16);
-		
-		PdfPCell cellTotVencValue = new PdfPCell(cellGray);
-		cellTotVencValue.setHorizontalAlignment(Element.ALIGN_RIGHT);
-		cellTotVencValue.setPhrase(new Phrase(holerite.getTotalVencimento().toString(), bold10));
-		cellTotVencValue.setFixedHeight(16);
-		
-		PdfPCell cellTotDescHead = new PdfPCell(cellGray);
-		cellTotDescHead.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cellTotDescHead.setPhrase(new Phrase("Total de Descontos", bold10));
-		cellTotDescHead.setFixedHeight(16);
-		
-		PdfPCell cellTotDescValue = new PdfPCell(cellGray);
-		cellTotDescValue.setHorizontalAlignment(Element.ALIGN_RIGHT);
-		cellTotDescValue.setPhrase(new Phrase(holerite.getTotalDesconto().toString(), bold10));
-		cellTotDescValue.setFixedHeight(16);
-		
-		totalPagamentos.addCell(cellTotVencHead);
-		totalPagamentos.addCell(cellTotVencValue);
-		totalPagamentos.addCell(cellTotDescHead);
-		totalPagamentos.addCell(cellTotDescValue);
-		
-		PdfPCell cellTotais = new PdfPCell(totalPagamentos);
-		cellTotais.setUseBorderPadding(false);
-		
-		PdfPCell cellLiquidoHead = new PdfPCell(cellGray);
-		cellLiquidoHead.setHorizontalAlignment(Element.ALIGN_CENTER);
+		PdfPCell cellLiquidoHead = new PdfPCell(cellHead);
 		cellLiquidoHead.setPhrase(new Phrase("Líquido de Pagamento", bold10));
-		cellLiquidoHead.setFixedHeight(16);
-		
-		PdfPCell cellLiquidoValue = new PdfPCell(cellGray);
-		cellLiquidoValue.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		cellLiquidoHead.setColspan(3);
+		PdfPCell cellLiquidoValue = new PdfPCell(cellValue);
 		cellLiquidoValue.setPhrase(new Phrase(holerite.getSalarioLiquido().toString(), bold10));
-		cellLiquidoValue.setFixedHeight(16);
 		
-		pagamentoLiquido.addCell(cellLiquidoHead);
-		pagamentoLiquido.addCell(cellLiquidoValue);
+		totais.addCell(cellLiquidoHead);
+		totais.addCell(cellLiquidoValue);
 		
-		PdfPCell cellLiquido = new PdfPCell(pagamentoLiquido);
-		cellLiquido.setUseBorderPadding(false);
+		return totais;
+	}
+	
+	private PdfPTable baseImpostos() {
+		float[] setColBase = {(float) 16.666, (float) 16.667, (float) 16.667, (float) 16.667, (float) 16.667, (float) 16.666};
+		
+		PdfPTable baseImpostos = new PdfPTable(6);
+		baseImpostos.setWidths(setColBase);
 		
 		PdfPCell cellBaseHeader = new PdfPCell(cellSilver);
 		cellBaseHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -383,37 +284,27 @@ public class PDFDocument {
 		
 		PdfPCell cellSalarioBaseHead = new PdfPCell(cellBaseHeader);
 		cellSalarioBaseHead.setPhrase(new Phrase("Salário Base", standard));
-		
 		PdfPCell cellBaseINSSHead = new PdfPCell(cellBaseHeader);
 		cellBaseINSSHead.setPhrase(new Phrase("Salário Contr. INSS", standard));
-		
 		PdfPCell cellBaseFGTSHead = new PdfPCell(cellBaseHeader);
 		cellBaseFGTSHead.setPhrase(new Phrase("Base Calc. FGTS", standard));
-		
 		PdfPCell cellFGTSMesHead = new PdfPCell(cellBaseHeader);
 		cellFGTSMesHead.setPhrase(new Phrase("FGTS do Mês", standard));
-	
 		PdfPCell cellBaseIRRFHead = new PdfPCell(cellBaseHeader);
 		cellBaseIRRFHead.setPhrase(new Phrase("Base Imp. de Renda", standard));
-		
 		PdfPCell cellFaixaIRRFHead = new PdfPCell(cellBaseHeader);
 		cellFaixaIRRFHead.setPhrase(new Phrase("Faixa de IRRF", standard));
 		
 		PdfPCell cellSalarioBase = new PdfPCell(cellBaseContent);
 		cellSalarioBase.setPhrase(new Phrase(holerite.getSalarioBase().toString(), standard));
-		
 		PdfPCell cellBaseINSS = new PdfPCell(cellBaseContent);
 		cellBaseINSS.setPhrase(new Phrase(holerite.getSalarioINSS().toString(), standard));
-		
 		PdfPCell cellBaseFGTS = new PdfPCell(cellBaseContent);
 		cellBaseFGTS.setPhrase(new Phrase(holerite.getSalarioFGTS().toString(), standard));
-		
 		PdfPCell cellFGTSMes = new PdfPCell(cellBaseContent);
 		cellFGTSMes.setPhrase(new Phrase(holerite.getFgtsMes().toString(), standard));
-	
 		PdfPCell cellBaseIRRF = new PdfPCell(cellBaseContent);
 		cellBaseIRRF.setPhrase(new Phrase(holerite.getSalarioIRRF().toString(), standard));
-		
 		PdfPCell cellFaixaIRRF = new PdfPCell(cellBaseContent);
 		cellFaixaIRRF.setPhrase(new Phrase(holerite.getFaixaIRRF().toString(), standard));
 	
@@ -431,28 +322,87 @@ public class PDFDocument {
 		baseImpostos.addCell(cellBaseIRRF);
 		baseImpostos.addCell(cellFaixaIRRF);
 		
-		PdfPCell cellBaseImpostos = new PdfPCell(baseImpostos);
+		return baseImpostos;
+	}
+	
+	public ByteArrayInputStream createHoleritePDF(Holerite holerite) {
+		this.holerite = holerite;
+		
+		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+		
+		cellGray.setBackgroundColor(gray);
+		cellSilver.setBackgroundColor(silver);
+		
+		Document document = new Document();
+		document.setMargins(20, 20, 30, 30);
+		
+		PdfPTable principalTable   = new PdfPTable(1);
+		principalTable.setWidthPercentage(100);
+		
+		PdfPCell cellTitle = new PdfPCell(cellGray);
+		cellTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cellTitle.setVerticalAlignment(Element.ALIGN_TOP);
+		cellTitle.setPhrase(new Phrase("Demostrativo Salarial", title));
+		cellTitle.setFixedHeight(20);
+		
+		cellSubtitle.setVerticalAlignment(Element.ALIGN_TOP);
+		cellSubtitle.setFixedHeight(14);
+		
+		cellContent.setVerticalAlignment(Element.ALIGN_TOP);
+		cellContent.setFixedHeight(14);
+		
+		int[] setColumns50 = {50, 50};
+		
+		PdfPTable pagamentos = new PdfPTable(2);
+		pagamentos.setWidths(setColumns50);
+		
+		PdfPCell cellColaborador = new PdfPCell(dadosColaborador());
+		cellColaborador.setUseBorderPadding(false);
+		
+		PdfPCell cellContrato = new PdfPCell(dadosContrato());
+		cellContrato.setUseBorderPadding(false);		
+		
+		List<HoleritePagamento> holeriteVencimentos = List.copyOf(holerite.getVencimentos());
+		List<HoleritePagamento> holeriteDescontos = List.copyOf(holerite.getDescontos());
+		
+		PdfPCell cellVencimentos = new PdfPCell(pagamentos(holeriteVencimentos, "Vencimentos"));
+		cellVencimentos.setUseBorderPadding(false);
+		cellVencimentos.setMinimumHeight(300);
+		
+		PdfPCell cellDescontos = new PdfPCell(pagamentos(holeriteDescontos, "Descontos"));
+		cellDescontos.setUseBorderPadding(false);
+		cellDescontos.setMinimumHeight(300);
+		
+		pagamentos.addCell(cellVencimentos);
+		pagamentos.addCell(cellDescontos);
+		
+		PdfPCell cellPagamentos = new PdfPCell(pagamentos);
+		cellPagamentos.setUseBorderPadding(false);
+		
+		PdfPCell cellTotais = new PdfPCell(totais());
+		cellTotais.setUseBorderPadding(false);
+		
+		PdfPCell cellBaseImpostos = new PdfPCell(baseImpostos());
 		cellBaseImpostos.setUseBorderPadding(false);
 		
 		principalTable.addCell(cellTitle);
 		principalTable.addCell(cellColaborador);
-		principalTable.addCell(cellContratoLine);
+		principalTable.addCell(cellContrato);
 		principalTable.addCell(cellPagamentos);
 		principalTable.addCell(cellTotais);
-		principalTable.addCell(cellLiquido);
 		principalTable.addCell(cellBaseImpostos);
+
+		try {
+			PdfWriter.getInstance(document, byteOutputStream);
+			document.open();
+			document.add(principalTable);
+
+			document.close();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		document.add(principalTable);
-		
-		document.close();
-		
-		/*
-		 * File file = new File(filePath + filename); System.out.println(
-		 * file.isFile()); FileInputStream fileInputStream;
-		 * 
-		 * try { fileInputStream = new FileInputStream(file); } catch
-		 * (FileNotFoundException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
+		return new ByteArrayInputStream(byteOutputStream.toByteArray());
 	}
 }

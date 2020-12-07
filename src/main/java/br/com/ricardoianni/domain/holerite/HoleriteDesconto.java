@@ -1,8 +1,5 @@
 package br.com.ricardoianni.domain.holerite;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,20 +15,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class HoleriteDesconto implements Serializable {
+public class HoleriteDesconto extends HoleritePagamento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "iddesconto")
 	private Integer idDesconto;
-	
-	private String classe;
-	
-	private String descricao;
-	
-	private String referencia;
-	
-	private BigDecimal valor;
 	
 	@ManyToOne
 	@JoinColumn(name = "idholerite")

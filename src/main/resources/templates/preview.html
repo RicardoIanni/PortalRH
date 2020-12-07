@@ -8,21 +8,21 @@
 <center><table border="1">
 	<tr>
 		<th>IDFUNC</th>
-		<td th:text="${holerite.getIdFunc.toString()}"></td>
+		<td th:text="${holerite.colaboradorHolerite.idfunc}"></td>
 		<th>NOME</th>
-		<td th:text="${holerite.nome}"></td>
+		<td th:text="${holerite.colaboradorHolerite.nome}"></td>
 	</tr>
 	<tr>
 		<th>CTPS</th>
-		<td th:text="${holerite.ctps}"></td>
+		<td th:text="${holerite.colaboradorHolerite.ctps}"></td>
 		<th>SERIE</th>
-		<td th:text="${holerite.serieCTPS}"></td>
+		<td th:text="${holerite.colaboradorHolerite.serieCTPS}"></td>
 	</tr>
 	<tr>
 		<th>PIS/PASEP</th>
-		<td th:text="${holerite.pis_pasep}"></td>
+		<td th:text="${holerite.colaboradorHolerite.pis_pasep}"></td>
 		<th>CPF</th>
-		<td th:text="${holerite.cpf}"></td>
+		<td th:text="${holerite.colaboradorHolerite.cpf}"></td>
 	</tr>
 	<tr>
 		<th>ADMISSAO</th>
@@ -131,7 +131,7 @@
 	</tr>
 	</div>
 </table>
-<form method="post" th:action="@{/pdf/download}">
+<form method="post" th:action="@{/master/holerite/pdf}">
 	<input type="hidden" name="idFunc" th:value="${holerite.getIdFunc.toString()}">
 	<input type="hidden" name="mes" th:value="${holerite.mes}">
 	<input type="hidden" name="ano" th:value="${holerite.ano}">

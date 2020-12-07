@@ -6,12 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.ricardoianni.domain.endereco.Cidade;
-import br.com.ricardoianni.domain.endereco.CidadeRepository;
-import br.com.ricardoianni.domain.endereco.Endereco;
-import br.com.ricardoianni.domain.endereco.EnderecoRepository;
-import br.com.ricardoianni.domain.endereco.Estado;
-import br.com.ricardoianni.domain.endereco.EstadoRepository;
+import br.com.ricardoianni.domain.address.Cidade;
+import br.com.ricardoianni.domain.address.CidadeRepository;
+import br.com.ricardoianni.domain.address.Endereco;
+import br.com.ricardoianni.domain.address.EnderecoRepository;
+import br.com.ricardoianni.domain.address.Estado;
+import br.com.ricardoianni.domain.address.EstadoRepository;
 import br.com.ricardoianni.util.CollectionUtils;
 
 @Service

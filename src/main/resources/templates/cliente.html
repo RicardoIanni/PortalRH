@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+</head>
+<body style="text-align: center; margin-top: 100px;">
+	<h1>Usuário Master</h1>
+	<br />
+	<br />
+	<div th:if="${clientes.size() > 0}" align="center">
+	<table>
+		<tr>
+			<th>Nome</th>
+			<th>Customer ID</th>
+			<th>Usuário Padrão</th>
+			<th>EndPoint</th>
+		</tr>
+		<tr th:each="cliente : ${clientes}">
+			<td th:text="${cliente.nome}"></td>
+			<td th:text="${cliente.customerID}"></td>
+			<td th:text="${cliente.username}"></td>
+			<td th:text="${cliente.endpoint}"></td>
+		</tr>
+	</table>
+	<br />
+	<br />
+	</div>
+	<div th:if="${!msgError.isBlank() && !msgError.isEmpty()}">
+		<span th:text="${msgError}" style="color: red;"></span>
+		<br />
+		<br />
+	</div>
+	<form method="post" th:object="${cliente}" th:action="@{/master/cliente/save}">
+		<label for="nome">NOME</label><br />
+		<input id="nome" type="text" th:field="*{nome}">
+		<br />
+		<br />
+		<label for="customerID">CUSTOMER ID</label><br />
+		<input id="customerID" type="text" th:field="*{customerID}">
+		<br /><br />
+		<label for="usuario">USUARIO PADRÃO WEBSERVICE</label><br />
+		<input id="usuario" type="text" th:field="*{username}">
+		<br /><br />
+		<label for="senha">PASSWORD</label><br />
+		<input id="senha" type="password" th:field="*{password}">
+		<br /><br />
+		<label>ENDPOINT</label><br />
+		<input id="endpoint" type="text" th:field="*{endpoint}">
+		<br /><br />
+		<input type="submit" value="Incluir Cliente">
+	</form>
+</body>
+</html>

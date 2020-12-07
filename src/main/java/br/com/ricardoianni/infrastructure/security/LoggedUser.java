@@ -6,7 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.ricardoianni.domain.usuario.Usuario;
+import br.com.ricardoianni.domain.employee.Colaborador;
+import br.com.ricardoianni.domain.masteruser.MasterUser;
+import br.com.ricardoianni.domain.user.Usuario;
 import br.com.ricardoianni.util.CollectionUtils;
 
 @SuppressWarnings("serial")
@@ -20,13 +22,13 @@ public class LoggedUser implements UserDetails {
 	public LoggedUser(Usuario usuario) {
 		this.user = usuario;
 		
-		Role role;
+		Role role = Role.NOTHING;
 		
-		if (usuario.isMaster()) {
+		if (usuario instanceof MasterUser) {
 			role = Role.MASTER;
-		} else if (usuario.isAdminstrator()) {
-			role = Role.ADMINISTRATOR;
-		} else {
+		} 
+		
+		if (usuario instanceof Colaborador) {
 			role = Role.EMPLOYEE;
 		}
 		

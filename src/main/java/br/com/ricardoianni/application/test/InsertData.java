@@ -7,17 +7,17 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import br.com.ricardoianni.domain.endereco.Estado;
-import br.com.ricardoianni.domain.endereco.EstadoRepository;
-import br.com.ricardoianni.domain.usuario.Usuario;
-import br.com.ricardoianni.domain.usuario.UsuarioRepository;
+import br.com.ricardoianni.domain.address.Estado;
+import br.com.ricardoianni.domain.address.EstadoRepository;
+import br.com.ricardoianni.domain.masteruser.MasterUser;
+import br.com.ricardoianni.domain.masteruser.MasterUserRepository;
 import br.com.ricardoianni.util.StringUtils;
 
 @Component
 public class InsertData {
 
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private MasterUserRepository masterUserRepository;
 	
 	@Autowired
 	private EstadoRepository estadoRepository;
@@ -30,17 +30,15 @@ public class InsertData {
 	}
 	
 	private void insertMasterUser() {
-		List<Usuario> masterUsers = usuarioRepository.findByMasterTrue();
+		List<MasterUser> masterUsers = masterUserRepository.findAll();
 		
 		if (masterUsers.size() == 0) {
-			Usuario masterUser = new Usuario();
+			MasterUser masterUser = new MasterUser();
 			
 			masterUser.setUsername("hsolera");
 			masterUser.setPassword(StringUtils.encrypt("hsf"));
-			masterUser.setMaster(true);
-			masterUser.setAdminstrator(false);
 			
-			usuarioRepository.save(masterUser);
+			masterUserRepository.save(masterUser);
 		}
 		
 	}
