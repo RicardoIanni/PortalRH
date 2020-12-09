@@ -12,4 +12,6 @@ public interface CidadeRepository extends JpaRepository<Cidade, Integer> {
 	
 	public List<Cidade> findByNomeCidadeContaining(String nomeCidade);
 	
+	public Cidade findByEstadoCidadeAndNomeCidade(Estado estado, String nomeCidade);
+	
 }

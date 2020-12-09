@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import br.com.ricardoianni.domain.address.Endereco;
 import br.com.ricardoianni.domain.customer.Cliente;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,9 +29,14 @@ public class Empresa implements Serializable {
 	private Integer idEmpresa;
 	
 	@EqualsAndHashCode.Include
+	@Column(name = "CNPJ")
 	private String cnpj;
 	
 	private String razaoSocial;
+	
+	@ManyToOne
+	@JoinColumn(name = "idendereco")
+	private Endereco enderecoEmpresa;
 	
 	@ManyToOne
 	@JoinColumn(name = "idcliente")

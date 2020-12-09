@@ -50,6 +50,7 @@ public class Holerite implements Serializable {
 	
 	private String funcao;
 	
+	@Column(name = "CBO")
 	private String cbo;
 	
 	private String departamento;
@@ -62,14 +63,19 @@ public class Holerite implements Serializable {
 	
 	private BigDecimal salarioBase;
 	
+	@Column(name = "salario_INSS")
 	private BigDecimal salarioINSS;
 	
+	@Column(name = "salario_FGTS")
 	private BigDecimal salarioFGTS;
 	
+	@Column(name = "FGTS_mes")
 	private BigDecimal fgtsMes;
 	
+	@Column(name = "salario_IRRF")
 	private BigDecimal salarioIRRF;
 	
+	@Column(name = "faixa_IRRF")
 	private BigDecimal faixaIRRF;
 	
 	@ManyToOne
@@ -80,10 +86,6 @@ public class Holerite implements Serializable {
 	@JoinColumn(name = "idempresa")
 	private Empresa empresaHolerite;
 	
-	@ManyToOne
-	@JoinColumn(name = "idendereco")
-	private Endereco enderecoHolerite;
-
 	@OneToMany(mappedBy = "holeriteVencimento")
 	private List<HoleriteVencimento> vencimentos = new ArrayList<>(0);
 	

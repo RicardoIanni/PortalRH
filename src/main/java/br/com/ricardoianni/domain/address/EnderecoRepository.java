@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
 
-	public List<Endereco> findByLogradouroAndNumeroAndComplementoAndBairroAndCidadeEndereco(String logradouro, 
+	public Endereco findByLogradouroAndNumeroAndComplementoAndBairroAndCidadeEndereco(String logradouro, 
 																							String numero, 
 																							String complemento, 
 																							String bairro, 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Detalhes Cliente</title>
+</head>
+<body style="text-align: center; margin-top: 50px;" th:object="${cliente}">
+	<h1>Usuário Master</h1>
+	<br />
+	<div align="center"><table border="1">
+		<tr>
+			<th>Nome</th>
+			<td th:text="${cliente.nome}"></td>
+			<th>Customer ID</th>
+			<td th:text="${cliente.customerID}"></td>
+			<th>Usuário Padrão</th>
+			<td th:text="${cliente.username}"></td>
+		</tr>
+		<tr>
+			<th>Endpoint</th>
+			<td colspan="5" th:text="${cliente.endpoint}"></td>
+		</tr>
+	</table></div>
+	<br />
+ 	<div th:if="${empresas.size() > 0}" align="center">
+	<table border="1">
+		<tr>
+			<th>CNPJ</th>
+			<th>RAZÃO SOCIAL</th>
+		</tr>
+		<tr th:each="empresa : ${empresas}">
+			<td th:text="${empresa.cnpj}"></td>
+			<td th:text="${empresa.razaoSocial}"></td>
+		</tr>
+	</table>
+	<br />
+	</div>
+ 	<div align="center">
+	<form method="post" th:action="@{/master/empresa/importar}">
+		<input type="hidden" name="idcliente" th:value="${cliente.idCliente}">
+		<input type="submit" value="Importar Empresas">
+	</form>
+	</div>
+</body>
+</html>

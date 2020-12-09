@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cidade implements Serializable {
 
 	@Id
@@ -27,10 +29,12 @@ public class Cidade implements Serializable {
 	@Column(name = "idcidade")
 	private Integer idCidade;
 	
+	@EqualsAndHashCode.Include
 	private String nomeCidade;
 	
 	@ManyToOne
 	@JoinColumn(name = "idestado")
+	@EqualsAndHashCode.Include
 	private Estado estadoCidade;
 	
 	@OneToMany(mappedBy = "cidadeEndereco")

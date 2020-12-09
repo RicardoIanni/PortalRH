@@ -39,8 +39,6 @@ public class EnderecoService {
 	}
 	
 	public List<Estado> estadoSearch(String sigla, String nomeEstado) {
-		List<Estado> estados = new ArrayList<>();
-		
 		if (sigla == null && nomeEstado == null) {
 			return estadoSearch();
 		} 
@@ -49,11 +47,27 @@ public class EnderecoService {
 			return estadoRepository.findByNomeEstadoContaining(nomeEstado);
 		}
 		
-		if (sigla != null) {
-			return estadoSearch(sigla);
+		return estadoSearch(sigla);
+	}
+	
+	public Cidade cidadeExactSearch(Estado estado, String nomeCidade) {
+		
+		if (estado == null || nomeCidade == null) {
+			return null;
 		}
 		
-		return estados;
+		return cidadeRepository.findByEstadoCidadeAndNomeCidade(estado, nomeCidade);
+	}
+	
+	public Cidade cidadeExactSearch(String sigla, String nomeCidade) {
+		
+		if (sigla == null || nomeCidade == null) {
+			return null;
+		}
+		
+		Estado estado = estadoRepository.findBySigla(sigla);
+		
+		return cidadeRepository.findByEstadoCidadeAndNomeCidade(estado, nomeCidade);
 	}
 	
 	public List<Cidade> cidadeSearch() {
@@ -116,6 +130,19 @@ public class EnderecoService {
 		cidadeRepository.save(cidade);
 	}
 	
+	public Endereco enderecoExactSearch(String logradouro, String numero, String complemento, String bairro, Cidade cidade) {
+		
+		if (logradouro == null || numero == null || bairro == null || cidade == null) {
+			return null;
+		}
+		
+		return enderecoRepository.findByLogradouroAndNumeroAndComplementoAndBairroAndCidadeEndereco(logradouro, 
+																									numero, 
+																									complemento, 
+																									bairro, 
+																									cidade);
+	}
+	
 	public List<Endereco> enderecoSearch() {
 		return enderecoRepository.findAll();
 	}
@@ -133,7 +160,11 @@ public class EnderecoService {
 			return enderecoSearch(cidade);
 		}
 		
-		return enderecoRepository.findByLogradouroAndNumeroAndComplementoAndBairroAndCidadeEndereco(logradouro, numero, complemento, bairro, cidade);
+		return CollectionUtils.listOf(enderecoRepository.findByLogradouroAndNumeroAndComplementoAndBairroAndCidadeEndereco(	logradouro, 
+																															numero, 
+																															complemento, 
+																															bairro, 
+																															cidade));
 	}
 	
 	public void enderecoSalvar(Endereco endereco) {

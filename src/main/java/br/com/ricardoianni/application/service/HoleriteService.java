@@ -94,7 +94,8 @@ public class HoleriteService {
 		if (empresas.size() == 0) { 
 			empresa = new Empresa();
 		  
-			empresa.setCnpj(cnpj); empresa.setRazaoSocial(XMLUtils.getTagValue(xmlDoc,"razao"));
+			empresa.setCnpj(cnpj); 
+			empresa.setRazaoSocial(XMLUtils.getTagValue(xmlDoc,"razao"));
 			  
 			empresaService.empresaSalvar(empresa); 
 		} else { 
@@ -142,8 +143,6 @@ public class HoleriteService {
 			endereco = enderecos.get(0); 
 		}
 		  
-		holerite.setEnderecoHolerite(endereco);
-		 
 		NodeList vencimentos = XMLUtils.getTagChildNodeList(xmlDoc, "vencimentos");
 		
 		List<HoleriteVencimento> holeriteVencimentos = new ArrayList<>(vencimentos.getLength());

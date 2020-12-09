@@ -29,12 +29,16 @@ public class Colaborador extends Usuario {
 	@Column(name = "idfunc")
 	private String idFunc;
 	
+	@Column(name = "CTPS")
 	private String ctps;
 	
+	@Column(name = "serie_CTPS")
 	private String serieCTPS;
 	
+	@Column(name = "PIS_PASEP")
 	private String pisPasep;
 	
+	@Column(name = "CPF")
 	private String cpf;
 	
 	@OneToMany(mappedBy = "colaboradorCompetencia")

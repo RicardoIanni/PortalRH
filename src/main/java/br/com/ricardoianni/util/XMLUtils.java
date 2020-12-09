@@ -43,6 +43,17 @@ public class XMLUtils {
 		return new BigDecimal(strData);
 	}
 	
+	public static String getTagValue(NodeList nodeList, String tagName) {
+		
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			if (nodeList.item(i).getNodeName() == tagName) {
+				return nodeList.item(i).getTextContent();
+			}
+		}
+		
+		return "<TAG não encontrada>";
+	}
+	
 	public static String getTagValue(Document xmlDoc, String tagName) {
 		return xmlDoc.getElementsByTagName(tagName).item(0).getTextContent();
 	}

@@ -47,16 +47,16 @@ public class PDFDocument {
 		String departamento = holerite.getDepartamento();
 		String funcao = holerite.getFuncao();
 		
-		String endereco = holerite.getEnderecoHolerite().getLogradouro() + "," +
-						  holerite.getEnderecoHolerite().getNumero() + " - ";
+		String endereco = holerite.getEmpresaHolerite().getEnderecoEmpresa().getLogradouro() + "," +
+						  holerite.getEmpresaHolerite().getEnderecoEmpresa().getNumero() + " - ";
 		
-		if (! holerite.getEnderecoHolerite().getComplemento().isEmpty()) {
-			  endereco += holerite.getEnderecoHolerite().getComplemento() + " - ";
+		if (! holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento().isEmpty()) {
+			  endereco += holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento() + " - ";
 		}
 		
-		endereco += holerite.getEnderecoHolerite().getBairro() + " - " +
-					holerite.getEnderecoHolerite().getCidadeEndereco().getNomeCidade() + "/" +
-					holerite.getEnderecoHolerite().getCidadeEndereco().getEstadoCidade().getSigla();
+		endereco += holerite.getEmpresaHolerite().getEnderecoEmpresa().getBairro() + " - " +
+					holerite.getEmpresaHolerite().getEnderecoEmpresa().getCidadeEndereco().getNomeCidade() + "/" +
+					holerite.getEmpresaHolerite().getEnderecoEmpresa().getCidadeEndereco().getEstadoCidade().getSigla();
 		
 		String nome = holerite.getColaboradorHolerite().getIdFunc().toString() + " - " +
 					  holerite.getColaboradorHolerite().getNome() + " - " +

@@ -58,5 +58,33 @@ public class WebServiceClient {
 		return xmlDoc;
 		
 	}
+	
+	public Document webServiceEmpresas() {
+		String comando = "XMLEmpresa:Exec()";
+		ExecutarComandoResponseExecutarComandoResult retorno;
+		Document xmlDoc = null;
+		
+		try {
+			retorno = webService.executarComando(comando, costumerID, username, password);
+			String xmlString = retorno.get_any()[0].getAsString();
+			
+			xmlString = xmlString.replaceAll("><", ">\n<");
+			String[] xmlArray = xmlString.split("\n");
+			
+			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+			for (int i = 1; i < xmlArray.length - 1; i++) {
+				xmlString += xmlArray[i].trim();
+			}
+			
+			xmlDoc = XMLUtils.convertStringToXML(xmlString);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return xmlDoc;
+		
+	}
 
 }

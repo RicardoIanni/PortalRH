@@ -8,4 +8,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 	public List<Cliente> findByNomeContaining(String nome);
 	
+	public Cliente findByIdCliente(Integer idCliente);
+	
 }

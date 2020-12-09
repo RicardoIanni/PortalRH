@@ -5,11 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.ricardoianni.application.service.ClienteService;
+import br.com.ricardoianni.domain.company.Empresa;
+import br.com.ricardoianni.domain.company.EmpresaRepository;
 import br.com.ricardoianni.domain.customer.Cliente;
 import br.com.ricardoianni.domain.customer.ClienteRepository;
 import br.com.ricardoianni.webservice.client.WebServiceClient;
@@ -21,6 +25,9 @@ public class ClienteController {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EmpresaRepository empresaRepository;
 	
 	@Autowired
 	private ClienteService clienteService;
@@ -54,5 +61,16 @@ public class ClienteController {
 		model.addAttribute("clientes", clientes);
 		
 		return "cliente";
+	}
+	
+	@GetMapping(path = "/details")
+	public String clienteDetalhes(@RequestParam(name = "idcliente") Integer idCliente, Model model) {
+		Cliente cliente = clienteRepository.findByIdCliente(idCliente);
+		List<Empresa> empresas = empresaRepository.findByClienteEmpresa(cliente);
+		
+		model.addAttribute("cliente", cliente);
+		model.addAttribute("empresas", empresas);
+		
+		return "cli_details";
 	}
 }
