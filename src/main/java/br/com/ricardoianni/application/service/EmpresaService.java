@@ -92,6 +92,7 @@ public class EmpresaService {
 			}
 			
 			empresa.setClienteEmpresa(cliente);
+			empresa.setCodigo(XMLUtils.getAttributeValue(nodeList.item(i), "codigo"));
 			empresa.setCnpj(XMLUtils.getTagValue(nodeChildList, "cnpj"));
 			empresa.setRazaoSocial(XMLUtils.getTagValue(nodeChildList, "razao"));
 			empresa.setEnderecoEmpresa(endereco);

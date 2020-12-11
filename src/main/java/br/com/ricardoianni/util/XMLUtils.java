@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 public class XMLUtils {
 
-	public static Document convertStringToXML(String xmlString) throws ParserConfigurationException, SAXException, IOException{
+	public static Document convertStringToXML(String xmlString) throws ParserConfigurationException, SAXException, IOException {
 	        
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -25,6 +25,21 @@ public class XMLUtils {
 	       
 		return document;
 		
+	}
+	
+	public static Document convertRetornoStringtoXML(String retornoString) throws ParserConfigurationException, SAXException, IOException {
+		
+		retornoString = retornoString.replaceAll("><", ">\n<");
+		String[] xmlArray = retornoString.split("\n");
+		
+		retornoString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+		for (int i = 1; i < xmlArray.length - 1; i++) {
+			retornoString += xmlArray[i].trim();
+		}
+		
+		Document document = convertStringToXML(retornoString);
+		
+		return document;
 	}
 	
 	public static LocalDate convertContextToDate(Document xmlDoc, String tagName) {
@@ -60,6 +75,17 @@ public class XMLUtils {
 	
 	public static NodeList getTagChildNodeList(Document xmlDoc, String tagName) {
 		return xmlDoc.getElementsByTagName(tagName).item(0).getChildNodes();
+	}
+	
+	public static NodeList getTagChildNodeList(NodeList nodeList, String tagName) {
+		
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			if (nodeList.item(i).getNodeName() == tagName) {
+				return nodeList.item(i).getChildNodes();
+			}
+		}
+		
+		return null;
 	}
 	
 	public static String getNodeValue(Node node) {

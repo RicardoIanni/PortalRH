@@ -60,7 +60,7 @@ public class ClienteController {
 		List<Cliente> clientes = clienteRepository.findAll();
 		model.addAttribute("clientes", clientes);
 		
-		return "cliente";
+		return "redirect:../home";
 	}
 	
 	@GetMapping(path = "/details")

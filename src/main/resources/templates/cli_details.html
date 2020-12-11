@@ -29,14 +29,14 @@
 			<th>RAZÃO SOCIAL</th>
 		</tr>
 		<tr th:each="empresa : ${empresas}">
-			<td th:text="${empresa.cnpj}"></td>
+			<td><a th:href="@{empresa/} + '?idempresa=' + ${empresa.idEmpresa}" th:text="${empresa.cnpj}"></a></td>
 			<td th:text="${empresa.razaoSocial}"></td>
 		</tr>
 	</table>
 	<br />
 	</div>
  	<div align="center">
-	<form method="post" th:action="@{/master/empresa/importar}">
+	<form method="post" th:action="@{empresa/importar}">
 		<input type="hidden" name="idcliente" th:value="${cliente.idCliente}">
 		<input type="submit" value="Importar Empresas">
 	</form>

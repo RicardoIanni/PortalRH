@@ -8,6 +8,8 @@ import br.com.ricardoianni.domain.customer.Cliente;
 
 public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 
+	public Empresa findByIdEmpresa(Integer idEmpresa);
+	
 	public List<Empresa> findByCnpjContaining(String cnpj);
 	
 	public List<Empresa> findByRazaoSocialContaining(String razaoSocial);

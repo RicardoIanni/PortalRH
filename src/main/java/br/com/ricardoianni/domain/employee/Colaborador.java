@@ -8,8 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.user.Usuario;
 import lombok.Getter;
@@ -46,5 +50,11 @@ public class Colaborador extends Usuario {
 	
 	@OneToMany(mappedBy = "colaboradorHolerite")
 	private List<Holerite> holerites = new ArrayList<>();
+	
+	@ManyToMany
+	@JoinTable(	name = "colaborador_empresa",
+				joinColumns = @JoinColumn(name = "idcolaborador"),
+				inverseJoinColumns = @JoinColumn(name = "idempresa") )
+	private List<Empresa> empresasColaborador = new ArrayList<>(0);
 	
 }

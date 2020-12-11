@@ -11,11 +11,8 @@ public class AdministradorController {
 	
 	@GetMapping(path = "/home")
 	public String administratorUserLogged(Model model) {
-		
-		model.addAttribute("master", false);
-		model.addAttribute("administrator", true);
-		
-		return "index";
+
+		return "index-administrador";
 	}
 
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Empresa</title>
+</head>
+<body style="text-align: center; margin-top: 50px;" th:object="${empresa}">
+	<h1>Usuário Master</h1>
+	<br />
+	<div align="center"><table border="1">
+		<tr>
+			<th>CNPJ</th>
+			<th>RAZÃO SOCIAL</th>
+		</tr>
+		<tr>
+			<td th:text="${empresa.cnpj}"></td>
+			<td th:text="${empresa.razaoSocial}"></td>
+		</tr>
+	</table>
+	<br />
+	</div>
+ 	<div th:if="${colaboradores.size() > 0}" align="center">
+	<table border="1">
+		<tr>
+			<th>CPF</th>
+			<th>NOME</th>
+		</tr>
+		<tr th:each="colaborador : ${colaboradores}">
+			<td th:text="${colaborador.cpf}"></td>
+			<td th:text="${colaborador.nome}"></td>
+		</tr>
+	</table>
+	<br />
+	</div>
+ 	<div align="center">
+	<form method="post" th:action="@{colab/importar}">
+		<input type="hidden" name="idempresa" th:value="${empresa.idEmpresa.toString()}">
+		<input type="submit" value="Importar Colaboradores">
+	</form>
+	</div>
+</body>
+</html>

@@ -15,7 +15,7 @@
 			<th>Usuário Padrão</th>
 		</tr>
 		<tr th:each="cliente : ${clientes}">
-			<td><a th:href="@{/master/cliente/details} + '?idcliente=' + ${cliente.idCliente}" th:text="${cliente.nome}"></a></td>
+			<td><a th:href="@{cliente/details} + '?idcliente=' + ${cliente.idCliente}" th:text="${cliente.nome}"></a></td>
 			<td th:text="${cliente.customerID}"></td>
 			<td th:text="${cliente.username}"></td>
 		</tr>

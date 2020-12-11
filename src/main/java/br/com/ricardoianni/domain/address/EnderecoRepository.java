@@ -1,7 +1,5 @@
 package br.com.ricardoianni.domain.address;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
