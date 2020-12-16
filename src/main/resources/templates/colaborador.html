@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Colaborador</title>
+</head>
+<body style="text-align: center; margin-top: 50px;" th:object="${colaborador}">
+	<h1>Usuário Master</h1>
+	<br />
+ 	<div align="center"><table border="1">
+		<tr>
+			<th>CPF</th>
+			<th>NOME</th>
+		</tr>
+		<tr>
+			<td th:text="${colaborador.cpf}"></td>
+			<td th:text="${colaborador.nome}"></td>
+		</tr>
+	</table></div>
+	<br />
+	<div align="center">
+	<form method="post" th:action="@{holerite/visualizar}">
+		<input type="hidden" name="idColaborador" th:value="${colaborador.idColaborador.toString()}">
+		<input type="hidden" name="idEmpresa" th:value="${empresa.idEmpresa.toString()}">
+		<select name="idCompetencia">
+			<option value="0" selected="selected">Escolha a competência</option>
+			<option th:each="competencia : ${competencias}" th:value="${competencia.idCompetencia}" th:text="${competencia.mes} + '/' + ${competencia.ano}"></option>
+		</select>
+		<input type="submit" value="Buscar Holerite">
+	</form>
+	</div>
+</body>
+</html>

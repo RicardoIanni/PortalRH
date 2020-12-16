@@ -9,12 +9,8 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import br.com.ricardoianni.domain.address.Cidade;
-import br.com.ricardoianni.domain.address.Endereco;
-import br.com.ricardoianni.domain.address.Estado;
 import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.employee.Colaborador;
-import br.com.ricardoianni.domain.employee.ColaboradorRepository;
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleriteDesconto;
 import br.com.ricardoianni.domain.holerite.HoleriteDescontoRepository;
@@ -37,38 +33,37 @@ public class HoleriteService {
 	@Autowired
 	private HoleriteDescontoRepository holeriteDescontoRepository;
 	
-	@Autowired
-	private ColaboradorRepository colaboradorRepository;
-	
-	@Autowired
-	private EmpresaService empresaService;
-	
-	@Autowired
-	private EnderecoService enderecoService;
-
-	public Holerite holeriteSearch(Colaborador colaborador, String mes, String ano) {
+	public Holerite holeriteSearchID(Integer idHolerite) {
 		
-		return holeriteRepository.findByColaboradorHoleriteAndMesAndAno(colaborador, mes, ano);
+		return holeriteRepository.findByIdHolerite(idHolerite);
+	}
+
+	public Holerite holeriteSearch(Colaborador colaborador, Empresa empresa, String mes, String ano) {
+		
+		return holeriteRepository.findByColaboradorHoleriteAndEmpresaHoleriteAndMesAndAno(colaborador, empresa, mes, ano);
 	}
 	
-	public Document holeriteCarregar(String idFunc, String mes, String ano) throws WebServiceClientException {
+	public Document holeriteCarregar(Colaborador colaborador, Empresa empresa, String mes, String ano) throws WebServiceClientException {
 		WebServiceClient webService = new WebServiceClient();
 		
-		//TODO: conectar conforme empresa do colaborador ativo ou escolhido
-		webService.setCostumerID("Desenv_R16");
-		webService.setUsername("hsolera");
-		webService.setPassword("59030732");
+		String customerID = empresa.getClienteEmpresa().getCustomerID();
+		String username = empresa.getClienteEmpresa().getUsername();
+		String password = empresa.getClienteEmpresa().getPassword();
+		String endPoint = empresa.getClienteEmpresa().getEndpoint();
 		
-		webService.webServiceStart("http://desenv.pdcore.com.br/NewAgeWebServiceSetup/EASWebService.asmx");
+		webService.setCostumerID(customerID);
+		webService.setUsername(username);
+		webService.setPassword(password);
 		
-		return webService.webServiceHolerite(idFunc, mes, ano);
+		webService.webServiceStart(endPoint);
+		
+		return webService.webServiceHolerite(colaborador, mes, ano);
 		
 	}
 	
-	public Holerite holeriteCriar(Document xmlDoc) {
+	public Holerite holeriteCriar(Document xmlDoc, Colaborador colaborador) {
 		Holerite holerite = new Holerite();
-		Colaborador colaborador = colaboradorRepository.findByIdFunc(XMLUtils.getTagValue(xmlDoc, "idfunc"));
-		
+
 		holerite.setColaboradorHolerite(colaborador);
 		holerite.setDataAdmissao(XMLUtils.convertContextToDate(xmlDoc, "dt_admissao"));
 		holerite.setContrato(XMLUtils.getTagValue(xmlDoc, "contrato"));
@@ -86,63 +81,10 @@ public class HoleriteService {
 		holerite.setSalarioIRRF(XMLUtils.convertContextToBigDecimal(xmlDoc, "baseirrf"));
 		holerite.setFaixaIRRF(XMLUtils.convertContextToBigDecimal(xmlDoc, "faixairrf"));
 		
-		String cnpj = XMLUtils.getTagValue(xmlDoc, "cnpj");
+		Empresa empresa = colaborador.getEmpresasColaborador().get(0);
 		
-		List<Empresa> empresas = empresaService.empresaSearch(cnpj); 
-		Empresa empresa;
-		  
-		if (empresas.size() == 0) { 
-			empresa = new Empresa();
-		  
-			empresa.setCnpj(cnpj); 
-			empresa.setRazaoSocial(XMLUtils.getTagValue(xmlDoc,"razao"));
-			  
-			empresaService.empresaSalvar(empresa); 
-		} else { 
-			empresa = empresas.get(0); 
-		}
-		  
 		holerite.setEmpresaHolerite(empresa);
-		 
-		String siglaEstado = XMLUtils.getTagValue(xmlDoc, "end_estado"); 
-		List<Estado> estados = enderecoService.estadoSearch(siglaEstado); 
-		Estado estado = estados.get(0);
-		
-		String nomeCidade = XMLUtils.getTagValue(xmlDoc, "end_cidade");
-		List<Cidade> cidades = enderecoService.cidadeSearch(estado, nomeCidade); 
-		Cidade cidade;
-		  
-		if (cidades.size() == 0) { 
-			cidade = new Cidade();
-
-			cidade.setEstadoCidade(estado);
-			cidade.setNomeCidade(nomeCidade);
-			enderecoService.cidadeSalvar(cidade); 
-		} else { 
-			cidade = cidades.get(0); 
-		}
-		 
-		String logradouro = XMLUtils.getTagValue(xmlDoc, "endereco"); 
-		String numero = XMLUtils.getTagValue(xmlDoc, "end_numero"); 
-		String complemento = XMLUtils.getTagValue(xmlDoc, "end_comple"); 
-		String bairro = XMLUtils.getTagValue(xmlDoc, "end_bairro"); 
-		List<Endereco> enderecos = enderecoService.enderecoSearch(logradouro, numero, complemento, bairro, cidade); 
-		Endereco endereco;
-		
-		if (enderecos.size() == 0) { 
-			endereco = new Endereco();
-
-			endereco.setLogradouro(logradouro); 
-			endereco.setNumero(numero);
-			endereco.setComplemento(complemento); 
-			endereco.setBairro(bairro);
-			endereco.setCidadeEndereco(cidade);
-		  
-			enderecoService.enderecoSalvar(endereco); 
-		} else { 
-			endereco = enderecos.get(0); 
-		}
-		  
+		 		  
 		NodeList vencimentos = XMLUtils.getTagChildNodeList(xmlDoc, "vencimentos");
 		
 		List<HoleriteVencimento> holeriteVencimentos = new ArrayList<>(vencimentos.getLength());

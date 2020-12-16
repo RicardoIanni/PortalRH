@@ -15,39 +15,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 
 import br.com.ricardoianni.application.pdf.PDFDocument;
+import br.com.ricardoianni.application.service.ColaboradorService;
+import br.com.ricardoianni.application.service.EmpresaService;
 import br.com.ricardoianni.application.service.HoleriteService;
+import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.employee.Colaborador;
-import br.com.ricardoianni.domain.employee.ColaboradorRepository;
+import br.com.ricardoianni.domain.employee.Competencia;
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleriteException;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
 @Controller
-@RequestMapping(path = { "/master/holerite", "/admin/holerite", "/colab/holerite" } )
+@RequestMapping(path = { "/master/cliente/empresa/colab/holerite", "/admin/empresa/colab/holerite", "/colab/holerite" } )
 public class HoleriteController {
 	
-	// TODO: Repositório do Colaborador não  deve ser necessário, já deve ser recebido o idColaborador
 	@Autowired
-	private ColaboradorRepository colaboradorRepository;
+	private EmpresaService empresaService;
 	
+	@Autowired
+	private ColaboradorService colaboradorService;
+
 	@Autowired
 	private HoleriteService holeriteService;
 	
+	
 	@PostMapping(path = "/visualizar")
-	public String holeriteView(	@RequestParam(name = "idFunc") String idFunc,
-								@RequestParam(name = "mes") String mes,
-								@RequestParam(name = "ano") String ano, 
+	public String holeriteView(	@RequestParam(name = "idColaborador") Integer idColaborador,
+								@RequestParam(name = "idEmpresa") Integer idEmpresa,
+								@RequestParam(name = "idCompetencia") Integer idCompetencia, 
 								Model model) throws HoleriteException {
-		//TODO: Esta pesquisa não deve ser necessária
-		Colaborador colaborador = colaboradorRepository.findByIdFunc(idFunc);
+		Colaborador colaborador = colaboradorService.colaboradorSearchID(idColaborador);
+		Empresa empresa = empresaService.empresaSearchID(idEmpresa);
+		Competencia competencia = colaboradorService.competenciaSearchID(idCompetencia);
 		
-		Holerite holerite = holeriteService.holeriteSearch(colaborador, mes, ano);
+		String mes = competencia.getMes();
+		String ano = competencia.getAno();
+		
+		Holerite holerite = holeriteService.holeriteSearch(colaborador, empresa, mes, ano);
 		
 		if (holerite == null) {
 			Document xmlDoc = null;
 			
 			try {
-				xmlDoc = holeriteService.holeriteCarregar(idFunc, mes, ano);
+				xmlDoc = holeriteService.holeriteCarregar(colaborador, empresa, mes, ano);
 			} catch (WebServiceClientException e) {
 				// TODO: Retorno com mensagem de erro ao conectar no WebService
 				e.printStackTrace();
@@ -56,7 +66,7 @@ public class HoleriteController {
 			if (xmlDoc == null) {
 				throw new HoleriteException("Erro ao carregar o Holerite do WebService");
 			} else {
-				holerite = holeriteService.holeriteCriar(xmlDoc);
+				holerite = holeriteService.holeriteCriar(xmlDoc, colaborador);
 				holerite.setMes(mes);
 				holerite.setAno(ano);
 				holeriteService.holeriteGravar(holerite);
@@ -70,13 +80,9 @@ public class HoleriteController {
 	}
 	
 	@PostMapping(path = "/pdf", produces = "application/pdf")
-	public ResponseEntity<InputStreamResource> holeritePDF(	@RequestParam(name = "idFunc") String idFunc,
-															@RequestParam(name = "mes") String mes,
-															@RequestParam(name = "ano") String ano) {
-		// TODO: Esta pesquisa não deve ser necessária
-		Colaborador colaborador = colaboradorRepository.findByIdFunc(idFunc);
+	public ResponseEntity<InputStreamResource> holeritePDF(	@RequestParam(name = "idHolerite") Integer idHolerite) {
 		
-		Holerite holerite = holeriteService.holeriteSearch(colaborador, mes, ano);
+		Holerite holerite = holeriteService.holeriteSearchID(idHolerite);
 		String filename = holerite.getColaboradorHolerite().getIdFunc() + holerite.getAno() + holerite.getMes() + ".pdf";
 		
 		PDFDocument pdf = new PDFDocument();

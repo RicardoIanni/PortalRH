@@ -92,6 +92,11 @@ public class ColaboradorService {
 		}
 	}
 	
+	public Colaborador colaboradorSearchID(Integer idColaborador) {
+		
+		return colaboradorRepository.findByIdColaborador(idColaborador);
+	}
+	
 	public List<Colaborador> colaboradorSearch() {
 		return colaboradorRepository.findAll();
 	}
@@ -109,6 +114,10 @@ public class ColaboradorService {
 	
 	public void colaboradorSavar(Colaborador colaborador) {
 		colaboradorRepository.save(colaborador);
+	}
+	
+	public Competencia competenciaSearchID(Integer idCompetencia) {
+		return competenciaRepository.findByIdCompetencia(idCompetencia);
 	}
 	
 	public void competenciaSavar(Competencia competencia) {

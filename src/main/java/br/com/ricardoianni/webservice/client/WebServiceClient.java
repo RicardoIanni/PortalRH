@@ -5,6 +5,7 @@ import org.tempuri.EASWebServiceSoap;
 import org.tempuri.ExecutarComandoResponseExecutarComandoResult;
 import org.w3c.dom.Document;
 
+import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.util.XMLUtils;
 import lombok.Data;
 
@@ -31,8 +32,8 @@ public class WebServiceClient {
 
 	}
 	
-	public Document webServiceHolerite(String idFunc, String mes, String ano) {
-		String comando = "XMLHolerite:Exec('" + idFunc + "', '" + mes + "', '" + ano + "')";
+	public Document webServiceHolerite(Colaborador colaborador, String mes, String ano) {
+		String comando = "XMLHolerite:Exec('" + colaborador.getIdFunc() + "', '" + mes + "', '" + ano + "')";
 		ExecutarComandoResponseExecutarComandoResult retorno;
 		Document xmlDoc = null;
 		

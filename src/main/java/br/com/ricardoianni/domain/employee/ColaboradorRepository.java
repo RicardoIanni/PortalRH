@@ -8,7 +8,7 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Intege
 
 	public Colaborador findByUsername(String username);
 	
-	public Colaborador findByIdFunc(String idFunc);
+	public Colaborador findByIdColaborador(Integer idColaborador);
 
 	public List<Colaborador> findByCpf(String cpf);
 	

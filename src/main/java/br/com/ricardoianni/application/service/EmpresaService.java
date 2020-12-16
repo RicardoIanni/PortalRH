@@ -103,6 +103,10 @@ public class EmpresaService {
 		
 	}
 	
+	public Empresa empresaSearchID(Integer idEmpresa) {
+		return empresaRepository.findByIdEmpresa(idEmpresa);
+	}
+	
 	public List<Empresa> empresaSearch() {
 		return empresaRepository.findAll();
 	}

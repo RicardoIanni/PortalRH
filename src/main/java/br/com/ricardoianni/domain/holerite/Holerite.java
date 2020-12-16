@@ -17,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import br.com.ricardoianni.domain.address.Endereco;
 import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.employee.Colaborador;
 import lombok.Getter;

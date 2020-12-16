@@ -8,7 +8,7 @@
 <center><table border="1">
 	<tr>
 		<th>IDFUNC</th>
-		<td th:text="${holerite.colaboradorHolerite.idfunc}"></td>
+		<td th:text="${holerite.colaboradorHolerite.idFunc}"></td>
 		<th>NOME</th>
 		<td th:text="${holerite.colaboradorHolerite.nome}"></td>
 	</tr>
@@ -20,7 +20,7 @@
 	</tr>
 	<tr>
 		<th>PIS/PASEP</th>
-		<td th:text="${holerite.colaboradorHolerite.pis_pasep}"></td>
+		<td th:text="${holerite.colaboradorHolerite.pisPasep}"></td>
 		<th>CPF</th>
 		<td th:text="${holerite.colaboradorHolerite.cpf}"></td>
 	</tr>
@@ -38,21 +38,21 @@
 	</tr>
 	<tr>
 		<th>ENDERECO</th>
-		<td th:text="${holerite.enderecoHolerite.logradouro}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.logradouro}"></td>
 		<th>NUMERO</th>
-		<td th:text="${holerite.enderecoHolerite.numero}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.numero}"></td>
 	</tr>
 	<tr>
 		<th>COMPLEMENTO</th>
-		<td th:text="${holerite.enderecoHolerite.complemento}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.complemento}"></td>
 		<th>BAIRRO</th>
-		<td th:text="${holerite.enderecoHolerite.bairro}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.bairro}"></td>
 	</tr>
 	<tr>
 		<th>CIDADE</th>
-		<td th:text="${holerite.enderecoHolerite.cidadeEndereco.nomeCidade}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.cidadeEndereco.nomeCidade}"></td>
 		<th>ESTADO</th>
-		<td th:text="${holerite.enderecoHolerite.cidadeEndereco.estadoCidade.sigla}"></td>
+		<td th:text="${holerite.empresaHolerite.enderecoEmpresa.cidadeEndereco.estadoCidade.sigla}"></td>
 	</tr>
 	<tr>
 		<th>FUNCAO</th>
@@ -131,10 +131,8 @@
 	</tr>
 	</div>
 </table>
-<form method="post" th:action="@{/master/holerite/pdf}">
-	<input type="hidden" name="idFunc" th:value="${holerite.getIdFunc.toString()}">
-	<input type="hidden" name="mes" th:value="${holerite.mes}">
-	<input type="hidden" name="ano" th:value="${holerite.ano}">
+<form method="post" th:action="@{pdf}">
+	<input type="hidden" name="idHolerite" th:value="${holerite.idHolerite.toString()}">
 	<input type="submit" value="PDF">
 </form></center>
 </body>

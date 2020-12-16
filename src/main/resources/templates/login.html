@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
+	<title>Login</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Language" content="pt-br">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/portal.css}" />
+	<script type="text/javascript" th:src="@{/js/portal.js}"></script>
 </head>
-<body style="text-align: center; margin-top: 50px;">
-<table style="margin-left: auto; margin-right: auto; text-align: left;">
-	<form id="login" method="post" th:action="@{/login}" autocomplete="off">
+<body id="login">
+<form method="post" th:action="@{/login}" autocomplete="off">
+<table id="login">
 	<tr>
-		<td>Username<br />
-		<input id="login" type="text" name="username" /></td>
-		<td>Password<br />
-		<input id="login" type="password" name="password" /></td>
+		<td id="usuario"><input id="login" type="text" name="username" /><br />
+		Usuário</td>
 	</tr>
 	<tr>
-		<td align="center"><input id="login" type="submit" value="Login" /></td>
-		<td align="center"><input id="login" type="reset" value="Reset" /></td>
+		<td id="senha" colspan="2"><input id="login" type="password" name="password" /><br />
+		Senha</td>
 	</tr>
-	</form>
 </table>
+<input type="submit" style="visibility: hidden;">
+</form>
 </body>
 </html>

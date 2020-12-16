@@ -35,6 +35,17 @@ public class EmpresaController {
 	@Autowired
 	private ColaboradorRepository colaboradorRepository;
 	
+	@GetMapping(path = "/")
+	public String empresaDetails(@RequestParam("idempresa") Integer idEmpresa, Model model) {
+		Empresa empresa = empresaRepository.findByIdEmpresa(idEmpresa);
+		List<Colaborador> colaboradores = colaboradorRepository.findByEmpresasColaborador_IdEmpresa(empresa.getIdEmpresa());
+		
+		model.addAttribute("empresa", empresa);
+		model.addAttribute("colaboradores", colaboradores);
+		
+		return "empresa";
+	}
+	
 	@PostMapping(path = "/importar")
 	public String empresaImportar(@RequestParam("idcliente") Integer idCliente, Model model) {
 		Cliente cliente = clienteRepository.findByIdCliente(idCliente);
@@ -47,17 +58,6 @@ public class EmpresaController {
 		}
 		
 		return "redirect:../details?idcliente=" + idCliente;
-	}
-	
-	@GetMapping(path = "/")
-	public String empresaDetails(@RequestParam("idempresa") Integer idEmpresa, Model model) {
-		Empresa empresa = empresaRepository.findByIdEmpresa(idEmpresa);
-		List<Colaborador> colaboradores = colaboradorRepository.findByEmpresasColaborador_IdEmpresa(empresa.getIdEmpresa());
-		
-		model.addAttribute("empresa", empresa);
-		model.addAttribute("colaboradores", colaboradores);
-		
-		return "empresa";
 	}
 
 }

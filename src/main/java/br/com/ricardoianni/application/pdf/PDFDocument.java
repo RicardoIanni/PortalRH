@@ -19,6 +19,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleritePagamento;
+import br.com.ricardoianni.util.StringUtils;
 
 public class PDFDocument {
 	
@@ -50,7 +51,7 @@ public class PDFDocument {
 		String endereco = holerite.getEmpresaHolerite().getEnderecoEmpresa().getLogradouro() + "," +
 						  holerite.getEmpresaHolerite().getEnderecoEmpresa().getNumero() + " - ";
 		
-		if (! holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento().isEmpty()) {
+		if (! StringUtils.isEmpty(holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento())) {
 			  endereco += holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento() + " - ";
 		}
 		

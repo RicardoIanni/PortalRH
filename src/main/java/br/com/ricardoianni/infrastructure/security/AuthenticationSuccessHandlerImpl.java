@@ -24,7 +24,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 		} else if (role == Role.ADMINISTRATOR) {
 			response.sendRedirect("admin/home");
 		} else if (role == Role.EMPLOYEE) {
-			response.sendRedirect("holerite/home");
+			response.sendRedirect("colab/home");
 		} else {
 			throw new IllegalStateException("Erro na autenticação");
 		}

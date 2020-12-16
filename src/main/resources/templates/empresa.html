@@ -26,7 +26,7 @@
 			<th>NOME</th>
 		</tr>
 		<tr th:each="colaborador : ${colaboradores}">
-			<td th:text="${colaborador.cpf}"></td>
+			<td><a th:href="@{colab/} + '?idcolaborador=' + ${colaborador.idColaborador}" th:text="${colaborador.cpf}" /></td>
 			<td th:text="${colaborador.nome}"></td>
 		</tr>
 	</table>

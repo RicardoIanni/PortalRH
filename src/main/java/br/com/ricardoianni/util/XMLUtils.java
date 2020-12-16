@@ -74,7 +74,13 @@ public class XMLUtils {
 	}
 	
 	public static NodeList getTagChildNodeList(Document xmlDoc, String tagName) {
-		return xmlDoc.getElementsByTagName(tagName).item(0).getChildNodes();
+		NodeList nodeList = xmlDoc.getElementsByTagName(tagName);
+		
+		if (nodeList.getLength() == 0) {
+			return nodeList;
+		}
+		
+		return nodeList.item(0).getChildNodes();
 	}
 	
 	public static NodeList getTagChildNodeList(NodeList nodeList, String tagName) {
