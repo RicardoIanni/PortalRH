@@ -19,7 +19,12 @@
 		Senha</td>
 	</tr>
 </table>
-<input type="submit" style="visibility: hidden;">
+<table id="submit">
+	<tr>
+		<td><input type="image" th:src="@{/images/btn_continuar.png}" /></td>
+	</tr>
+</table>
+<div id="loginError" th:if=${loginError}>Senha inválida</div>
 </form>
 </body>
 </html>

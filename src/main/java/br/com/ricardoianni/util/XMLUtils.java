@@ -66,7 +66,7 @@ public class XMLUtils {
 			}
 		}
 		
-		return "<TAG não encontrada>";
+		return "";
 	}
 	
 	public static String getTagValue(Document xmlDoc, String tagName) {

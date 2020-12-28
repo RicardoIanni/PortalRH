@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.ricardoianni.application.service.ColaboradorService;
+import br.com.ricardoianni.domain.administrator.Administrador;
 import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.company.EmpresaRepository;
 import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.domain.employee.Competencia;
 import br.com.ricardoianni.domain.employee.CompetenciaRepository;
+import br.com.ricardoianni.domain.masteruser.MasterUser;
+import br.com.ricardoianni.domain.user.Usuario;
 import br.com.ricardoianni.util.SecurityUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
@@ -32,24 +35,33 @@ public class ColaboradorController {
 	@Autowired
 	private EmpresaRepository empresaRepository;
 
-	@GetMapping(path = "/home")
-	public String employeeUserLogged(Model model) {
-		Colaborador colaborador = (Colaborador) SecurityUtils.getUsuario();
+	@GetMapping(path = {"/", "/home"})
+	public String employeeUserLogged(@RequestParam(name = "idcolaborador", required = false) Integer idColaborador, Model model) {
+		Usuario usuario = SecurityUtils.getUsuario();
+
+		if (usuario instanceof MasterUser) {
+			model.addAttribute("usuario", "master");
+		} else if (usuario instanceof Administrador) {
+			model.addAttribute("usuario", "administrador");
+		} else if (usuario instanceof Colaborador) {
+			model.addAttribute("usuario", "colaborador");
+		}
 		
-		model.addAttribute("colaborador", colaborador);
+		Colaborador colaborador;
 		
-		return "colaborador";
-	}
-	
-	@GetMapping(path = "/")
-	public String employeeUserLogged(@RequestParam(name = "idcolaborador") Integer idColaborador, Model model) {
-		Colaborador colaborador = colaboradorService.colaboradorSearchID(idColaborador);			
+		if (idColaborador != null) {
+			colaborador = colaboradorService.colaboradorSearchID(idColaborador);			
+		} else {
+			colaborador = (Colaborador) usuario;
+		}
+		
 		List<Competencia> competencias = competenciaRepository.findByColaboradorCompetenciaOrderByAnoDescMesDesc(colaborador);
 		Empresa empresa = empresaRepository.findByIdEmpresa(colaborador.getEmpresasColaborador().get(0).getIdEmpresa());
 		
 		model.addAttribute("colaborador", colaborador);
 		model.addAttribute("competencias", competencias);
 		model.addAttribute("empresa", empresa);
+		model.addAttribute("usuario", model.getAttribute("usuario"));
 		
 		return "colaborador";
 	}

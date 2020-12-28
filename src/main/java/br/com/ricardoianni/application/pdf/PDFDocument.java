@@ -19,6 +19,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleritePagamento;
+import br.com.ricardoianni.util.FormatUtils;
 import br.com.ricardoianni.util.StringUtils;
 
 public class PDFDocument {
@@ -48,15 +49,21 @@ public class PDFDocument {
 		String departamento = holerite.getDepartamento();
 		String funcao = holerite.getFuncao();
 		
-		String endereco = holerite.getEmpresaHolerite().getEnderecoEmpresa().getLogradouro() + "," +
-						  holerite.getEmpresaHolerite().getEnderecoEmpresa().getNumero() + " - ";
+		String endereco = holerite.getEmpresaHolerite().getEnderecoEmpresa().getLogradouro();
 		
-		if (! StringUtils.isEmpty(holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento())) {
-			  endereco += holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento() + " - ";
+		if (! StringUtils.isEmpty(holerite.getEmpresaHolerite().getEnderecoEmpresa().getNumero())) {
+			endereco += ", " + holerite.getEmpresaHolerite().getEnderecoEmpresa().getNumero();
 		}
 		
-		endereco += holerite.getEmpresaHolerite().getEnderecoEmpresa().getBairro() + " - " +
-					holerite.getEmpresaHolerite().getEnderecoEmpresa().getCidadeEndereco().getNomeCidade() + "/" +
+		if (! StringUtils.isEmpty(holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento())) {
+			endereco += " - " + holerite.getEmpresaHolerite().getEnderecoEmpresa().getComplemento();
+		}
+		
+		if (! StringUtils.isEmpty(holerite.getEmpresaHolerite().getEnderecoEmpresa().getBairro())) {
+			endereco += " - " + holerite.getEmpresaHolerite().getEnderecoEmpresa().getBairro();
+		}
+		
+		endereco += " - " + holerite.getEmpresaHolerite().getEnderecoEmpresa().getCidadeEndereco().getNomeCidade() + "/" +
 					holerite.getEmpresaHolerite().getEnderecoEmpresa().getCidadeEndereco().getEstadoCidade().getSigla();
 		
 		String nome = holerite.getColaboradorHolerite().getIdFunc().toString() + " - " +
@@ -214,7 +221,7 @@ public class PDFDocument {
 			cellCode.setPhrase(new Phrase(holeritePagamento.getClasse(), standard));
 			cellDescription.setPhrase(new Phrase(holeritePagamento.getDescricao(), standard));
 			cellReference.setPhrase(new Phrase(holeritePagamento.getReferencia(), standard));
-			cellValue.setPhrase(new Phrase(holeritePagamento.getValor().toString(), standard));
+			cellValue.setPhrase(new Phrase(FormatUtils.formatCurrency(holeritePagamento.getValor()), standard));
 			
 			pagamentos.addCell(cellCode);
 			pagamentos.addCell(cellDescription);
@@ -243,12 +250,12 @@ public class PDFDocument {
 		PdfPCell cellVencHead = new PdfPCell(cellHead);
 		cellVencHead.setPhrase(new Phrase("Total de Vencimentos", bold10));
 		PdfPCell cellVencValue = new PdfPCell(cellValue);
-		cellVencValue.setPhrase(new Phrase(holerite.getTotalVencimento().toString(), bold10));
+		cellVencValue.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getTotalVencimento()), bold10));
 		
 		PdfPCell cellDescHead = new PdfPCell(cellHead);
 		cellDescHead.setPhrase(new Phrase("Total de Descontos", bold10));
 		PdfPCell cellDescValue = new PdfPCell(cellValue);
-		cellDescValue.setPhrase(new Phrase(holerite.getTotalDesconto().toString(), bold10));
+		cellDescValue.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getTotalDesconto()), bold10));
 		
 		totais.addCell(cellVencHead);
 		totais.addCell(cellVencValue);
@@ -259,7 +266,7 @@ public class PDFDocument {
 		cellLiquidoHead.setPhrase(new Phrase("Líquido de Pagamento", bold10));
 		cellLiquidoHead.setColspan(3);
 		PdfPCell cellLiquidoValue = new PdfPCell(cellValue);
-		cellLiquidoValue.setPhrase(new Phrase(holerite.getSalarioLiquido().toString(), bold10));
+		cellLiquidoValue.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getSalarioLiquido()), bold10));
 		
 		totais.addCell(cellLiquidoHead);
 		totais.addCell(cellLiquidoValue);
@@ -297,17 +304,17 @@ public class PDFDocument {
 		cellFaixaIRRFHead.setPhrase(new Phrase("Faixa de IRRF", standard));
 		
 		PdfPCell cellSalarioBase = new PdfPCell(cellBaseContent);
-		cellSalarioBase.setPhrase(new Phrase(holerite.getSalarioBase().toString(), standard));
+		cellSalarioBase.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getSalarioBase()), standard));
 		PdfPCell cellBaseINSS = new PdfPCell(cellBaseContent);
-		cellBaseINSS.setPhrase(new Phrase(holerite.getSalarioINSS().toString(), standard));
+		cellBaseINSS.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getSalarioINSS()), standard));
 		PdfPCell cellBaseFGTS = new PdfPCell(cellBaseContent);
-		cellBaseFGTS.setPhrase(new Phrase(holerite.getSalarioFGTS().toString(), standard));
+		cellBaseFGTS.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getSalarioFGTS()), standard));
 		PdfPCell cellFGTSMes = new PdfPCell(cellBaseContent);
-		cellFGTSMes.setPhrase(new Phrase(holerite.getFgtsMes().toString(), standard));
+		cellFGTSMes.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getFgtsMes()), standard));
 		PdfPCell cellBaseIRRF = new PdfPCell(cellBaseContent);
-		cellBaseIRRF.setPhrase(new Phrase(holerite.getSalarioIRRF().toString(), standard));
+		cellBaseIRRF.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getSalarioIRRF()), standard));
 		PdfPCell cellFaixaIRRF = new PdfPCell(cellBaseContent);
-		cellFaixaIRRF.setPhrase(new Phrase(holerite.getFaixaIRRF().toString(), standard));
+		cellFaixaIRRF.setPhrase(new Phrase(FormatUtils.formatCurrency(holerite.getFaixaIRRF()), standard));
 	
 		baseImpostos.addCell(cellSalarioBaseHead);
 		baseImpostos.addCell(cellBaseINSSHead);

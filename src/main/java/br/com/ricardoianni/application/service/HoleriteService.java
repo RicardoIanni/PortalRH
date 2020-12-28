@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -61,6 +62,7 @@ public class HoleriteService {
 		
 	}
 	
+	@Transactional
 	public Holerite holeriteCriar(Document xmlDoc, Colaborador colaborador) {
 		Holerite holerite = new Holerite();
 
@@ -124,6 +126,7 @@ public class HoleriteService {
 		return holerite;
 	}
 	
+	@Transactional
 	public void holeriteGravar(Holerite holerite) {
 		holeriteRepository.save(holerite);
 
@@ -139,10 +142,12 @@ public class HoleriteService {
 
 	}
 	
+	@Transactional
 	public void vencimentoGravar(HoleriteVencimento vencimento) {
 		holeriteVencimentoRepository.save(vencimento);
 	}
 
+	@Transactional
 	public void descontoGravar(HoleriteDesconto desconto) {
 		holeriteDescontoRepository.save(desconto);
 	}

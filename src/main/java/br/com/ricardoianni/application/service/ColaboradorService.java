@@ -1,9 +1,11 @@
 package br.com.ricardoianni.application.service;
 
+import java.time.Year;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -14,6 +16,7 @@ import br.com.ricardoianni.domain.employee.ColaboradorRepository;
 import br.com.ricardoianni.domain.employee.Competencia;
 import br.com.ricardoianni.domain.employee.CompetenciaRepository;
 import br.com.ricardoianni.util.CollectionUtils;
+import br.com.ricardoianni.util.StringUtils;
 import br.com.ricardoianni.util.XMLUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClient;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
@@ -27,6 +30,7 @@ public class ColaboradorService {
 	@Autowired
 	private CompetenciaRepository competenciaRepository;
 	
+	@Transactional
 	public void colaboradorImportar(Empresa empresa) throws WebServiceClientException  {
 		Cliente cliente = empresa.getClienteEmpresa();
 		
@@ -47,18 +51,36 @@ public class ColaboradorService {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			nodeChildList = nodeList.item(i).getChildNodes();
 			
-			if (colaboradorSearchCPF(XMLUtils.getTagValue(nodeChildList, "cpf")).size() > 0) {
+			String cpf = XMLUtils.getTagValue(nodeChildList, "cpf");
+			
+			if (colaboradorSearchCPF(cpf).size() > 0) {
 				continue;
 			}
 		
+			String dataNascto = XMLUtils.getTagValue(nodeChildList, "dt_nascto");
+					
+			String senha = cpf.substring(0, 4);
+					
+			if (StringUtils.isEmpty(dataNascto)) {
+				senha = senha + Year.now().toString();
+			} else {
+				senha = senha + dataNascto.substring(dataNascto.length() - 4);
+			}
+			
 			Colaborador colaborador = new Colaborador();
-
+			
+			colaborador.setUsername(cpf);
+			colaborador.setPassword(senha);
+			colaborador.setNickname(senha);
+			colaborador.encryptPassword();
+			
 			colaborador.setIdFunc(XMLUtils.getTagValue(nodeChildList, "idfunc"));
-			colaborador.setCpf(XMLUtils.getTagValue(nodeChildList, "cpf"));
+			colaborador.setCpf(cpf);
 			colaborador.setCtps(XMLUtils.getTagValue(nodeChildList, "ctps"));
 			colaborador.setSerieCTPS(XMLUtils.getTagValue(nodeChildList, "serie_ctps"));
 			colaborador.setPisPasep(XMLUtils.getTagValue(nodeChildList, "pispasep"));
 			colaborador.setNome(XMLUtils.getTagValue(nodeChildList, "nome"));
+			colaborador.setDataNascimento(dataNascto);
 			
 			colaborador.setEmpresasColaborador(CollectionUtils.listOf(empresa));
 			
@@ -112,6 +134,7 @@ public class ColaboradorService {
 		return colaboradorRepository.findAll();
 	}
 	
+	@Transactional
 	public void colaboradorSavar(Colaborador colaborador) {
 		colaboradorRepository.save(colaborador);
 	}
@@ -120,6 +143,7 @@ public class ColaboradorService {
 		return competenciaRepository.findByIdCompetencia(idCompetencia);
 	}
 	
+	@Transactional
 	public void competenciaSavar(Competencia competencia) {
 		competenciaRepository.save(competencia);
 	}

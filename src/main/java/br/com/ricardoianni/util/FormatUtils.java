@@ -2,6 +2,7 @@ package br.com.ricardoianni.util;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Locale;
 
 public class FormatUtils {
@@ -34,6 +35,17 @@ public class FormatUtils {
 		
 		return newNumberFormat().format(number);
 		
+	}
+	
+	public static String formatCurrency(Double number) {
+		Currency currency = Currency.getInstance(LOCALE_BRAZIL);
+		NumberFormat currencyFormartter = NumberFormat.getCurrencyInstance(LOCALE_BRAZIL);
+		
+		return currencyFormartter.format(number);
+	}
+	
+	public static String formatCurrency(BigDecimal number) {
+		return formatCurrency(number.doubleValue());		
 	}
 	
 }

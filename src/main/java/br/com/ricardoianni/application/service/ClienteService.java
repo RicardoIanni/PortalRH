@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ricardoianni.domain.customer.Cliente;
 import br.com.ricardoianni.domain.customer.ClienteRepository;
@@ -23,6 +24,7 @@ public class ClienteService {
 		return clienteRepository.findByNomeContaining(texto);
 	}
 	
+	@Transactional
 	public void clienteSave(Cliente cliente) {
 		clienteRepository.save(cliente);
 	}

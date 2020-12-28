@@ -26,6 +26,7 @@ public class LoggedUser implements UserDetails {
 		
 		if (usuario instanceof MasterUser) {
 			role = Role.MASTER;
+			
 		} 
 		
 		if (usuario instanceof Colaborador) {

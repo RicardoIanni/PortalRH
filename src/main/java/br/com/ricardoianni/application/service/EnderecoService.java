@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ricardoianni.domain.address.Cidade;
 import br.com.ricardoianni.domain.address.CidadeRepository;
@@ -126,6 +127,7 @@ public class EnderecoService {
 		return cidadeRepository.findByEstadoCidadeAndNomeCidadeContaining(estado, nomeCidade);
 	}
 	
+	@Transactional
 	public void cidadeSalvar(Cidade cidade) {
 		cidadeRepository.save(cidade);
 	}
@@ -167,6 +169,7 @@ public class EnderecoService {
 																															cidade));
 	}
 	
+	@Transactional
 	public void enderecoSalvar(Endereco endereco) {
 		enderecoRepository.save(endereco);
 	}

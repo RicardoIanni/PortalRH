@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -27,6 +28,7 @@ public class EmpresaService {
 	@Autowired
 	private EnderecoService enderecoService;
 	
+	@Transactional
 	public void empresaImportar(Cliente cliente) throws WebServiceClientException {
 		WebServiceClient webService = new WebServiceClient();
 		
@@ -127,6 +129,7 @@ public class EmpresaService {
 		return empresas;
 	}
 	
+	@Transactional
 	public void empresaSalvar(Empresa empresa) {
 		empresaRepository.save(empresa);
 	}

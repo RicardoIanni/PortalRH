@@ -5,7 +5,8 @@
 <title>Colaborador</title>
 </head>
 <body style="text-align: center; margin-top: 50px;" th:object="${colaborador}">
-	<h1>Usuário Master</h1>
+	<h1 th:if="${usuario} == 'master'">Usuário Master</h1>
+	<h1 th:if="${usuario} == 'colaborador'">Usuário Colaborador</h1>
 	<br />
  	<div align="center"><table border="1">
 		<tr>
