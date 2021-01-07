@@ -1,5 +1,6 @@
 package br.com.ricardoianni.infrastructure.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,10 @@ import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.company.EmpresaRepository;
 import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.domain.employee.Competencia;
-import br.com.ricardoianni.domain.employee.CompetenciaRepository;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;
 import br.com.ricardoianni.domain.masteruser.MasterUser;
 import br.com.ricardoianni.domain.user.Usuario;
+import br.com.ricardoianni.util.CollectionUtils;
 import br.com.ricardoianni.util.SecurityUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
@@ -28,9 +30,6 @@ public class ColaboradorController {
 	
 	@Autowired
 	private ColaboradorService colaboradorService;
-	
-	@Autowired
-	private CompetenciaRepository competenciaRepository;
 	
 	@Autowired
 	private EmpresaRepository empresaRepository;
@@ -55,12 +54,24 @@ public class ColaboradorController {
 			colaborador = (Colaborador) usuario;
 		}
 		
-		List<Competencia> competencias = competenciaRepository.findByColaboradorCompetenciaOrderByAnoDescMesDesc(colaborador);
+		// TODO: Ajustar para colaboradores com mais de uma empresa
+		List<Competencia> competencias = new ArrayList<>();
+		
+		try {
+			competencias = colaboradorService.competenciaList(colaborador);
+		} catch (WebServiceClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Empresa empresa = empresaRepository.findByIdEmpresa(colaborador.getEmpresasColaborador().get(0).getIdEmpresa());
+		
+		List<TipoRecibo> tiposRecibo = CollectionUtils.listOf(TipoRecibo.values());
 		
 		model.addAttribute("colaborador", colaborador);
 		model.addAttribute("competencias", competencias);
 		model.addAttribute("empresa", empresa);
+		model.addAttribute("tiposRecibo", tiposRecibo);
 		model.addAttribute("usuario", model.getAttribute("usuario"));
 		
 		return "colaborador";

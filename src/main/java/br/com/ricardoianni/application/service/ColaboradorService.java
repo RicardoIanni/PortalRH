@@ -1,6 +1,7 @@
 package br.com.ricardoianni.application.service;
 
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.domain.employee.ColaboradorRepository;
 import br.com.ricardoianni.domain.employee.Competencia;
 import br.com.ricardoianni.domain.employee.CompetenciaRepository;
+import br.com.ricardoianni.domain.employee.Recibo;
+import br.com.ricardoianni.domain.employee.ReciboRepository;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;
 import br.com.ricardoianni.util.CollectionUtils;
 import br.com.ricardoianni.util.StringUtils;
 import br.com.ricardoianni.util.XMLUtils;
@@ -26,9 +30,12 @@ public class ColaboradorService {
 
 	@Autowired
 	private ColaboradorRepository colaboradorRepository;
-	
+
 	@Autowired
 	private CompetenciaRepository competenciaRepository;
+
+	@Autowired
+	private ReciboRepository reciboRepository;
 	
 	@Transactional
 	public void colaboradorImportar(Empresa empresa) throws WebServiceClientException  {
@@ -71,6 +78,7 @@ public class ColaboradorService {
 			
 			colaborador.setUsername(cpf);
 			colaborador.setPassword(senha);
+			// TODO: Retirar a senha do campo nickname
 			colaborador.setNickname(senha);
 			colaborador.encryptPassword();
 			
@@ -84,34 +92,79 @@ public class ColaboradorService {
 			
 			colaborador.setEmpresasColaborador(CollectionUtils.listOf(empresa));
 			
-			colaboradorSavar(colaborador);
+			colaboradorSalvar(colaborador);
 			
-			NodeList competencias = XMLUtils.getTagChildNodeList(nodeChildList, "competencias");
-			
-			if (competencias != null) {
-				Competencia competencia;
-				String mes;
-				String ano;
-				
-				for (int j = 0; j < competencias.getLength(); j++) {
-					mes = XMLUtils.getAttributeValue(competencias.item(j), "mes");
-					ano = XMLUtils.getAttributeValue(competencias.item(j), "ano");
-					
-					if (competenciaRepository.findByColaboradorCompetenciaAndMesAndAno(colaborador, mes, ano).size() > 0) {
-						continue;
-					}
-					
-					competencia = new Competencia();
-					
-					competencia.setColaboradorCompetencia(colaborador);
-					competencia.setMes(mes);
-					competencia.setAno(ano);
-					
-					competenciaSavar(competencia);
-				}
-			}
-					
 		}
+	}
+	
+	@Transactional
+	public List<Competencia> competenciaImportar(Colaborador colaborador) throws WebServiceClientException {
+		
+		// TODO: Ajustar para colaboradores com mais de uma empresa
+		Cliente cliente = colaborador.getEmpresasColaborador().get(0).getClienteEmpresa();
+		
+		WebServiceClient webService = new WebServiceClient();
+		
+		webService.setCostumerID(cliente.getCustomerID());
+		webService.setUsername(cliente.getUsername());
+		webService.setPassword(cliente.getPassword());
+		
+		webService.webServiceStart(cliente.getEndpoint());
+		
+		Document xmlDoc = webService.webServiceCompetencias(colaborador.getIdFunc());
+		
+		NodeList xmlCompetencias = XMLUtils.getTagChildNodeList(xmlDoc, "competencias");
+		  
+		Competencia competencia; 
+		String mes;
+		String ano;
+		
+		List<Competencia> competencias = new ArrayList<>();
+		
+		for (int i = 0; i < xmlCompetencias.getLength(); i++) { 
+				
+			mes = XMLUtils.getAttributeValue(xmlCompetencias.item(i), "mes"); 
+			ano = XMLUtils.getAttributeValue(xmlCompetencias.item(i), "ano");
+			
+			if (!xmlCompetencias.item(i).hasChildNodes()) {
+				continue;
+			}
+			
+			NodeList xmlRecibos = xmlCompetencias.item(i).getChildNodes();
+			
+			competencia = new Competencia();
+		  
+			competencia.setColaboradorCompetencia(colaborador); 
+			competencia.setMes(mes);
+			competencia.setAno(ano);
+			
+			competenciaSalvar(competencia); 
+
+			String tipoRecibo;
+			
+			List<Recibo> recibos = new ArrayList<>();
+			
+			for (int j = 0; j < xmlRecibos.getLength(); j++) {
+			
+				tipoRecibo = XMLUtils.getNodeValue(xmlRecibos.item(j));
+				
+				Recibo recibo = new Recibo();
+				
+				recibo.setCompetenciaRecibo(competencia);
+				recibo.setTipoRecibo(TipoRecibo.valueOf(tipoRecibo));
+				
+				reciboSalvar(recibo);
+				
+				recibos.add(recibo);
+			}	
+			
+			competencia.setRecibos(recibos);
+			
+			competencias.add(competencia);
+		}
+		
+		return competencias;
+		 		
 	}
 	
 	public Colaborador colaboradorSearchID(Integer idColaborador) {
@@ -135,7 +188,7 @@ public class ColaboradorService {
 	}
 	
 	@Transactional
-	public void colaboradorSavar(Colaborador colaborador) {
+	public void colaboradorSalvar(Colaborador colaborador) {
 		colaboradorRepository.save(colaborador);
 	}
 	
@@ -143,8 +196,23 @@ public class ColaboradorService {
 		return competenciaRepository.findByIdCompetencia(idCompetencia);
 	}
 	
+	public List<Competencia> competenciaList(Colaborador colaborador) throws WebServiceClientException {
+		List<Competencia> competencias = competenciaRepository.findByColaboradorCompetenciaOrderByAnoDescMesDesc(colaborador);
+		
+		if (competencias.size() == 0) {
+			competencias = competenciaImportar(colaborador);
+		}
+		
+		return competencias;
+	}
+	
 	@Transactional
-	public void competenciaSavar(Competencia competencia) {
+	public void competenciaSalvar(Competencia competencia) {
 		competenciaRepository.save(competencia);
+	}
+	
+	@Transactional
+	public void reciboSalvar(Recibo recibo) {
+		reciboRepository.save(recibo);
 	}
 }

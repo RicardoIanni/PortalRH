@@ -37,6 +37,8 @@ public class Holerite implements Serializable {
 	
 	private String ano;
 	
+	private TipoRecibo tipoRecibo;
+	
 	private LocalDate dataAdmissao;
 	
 	public String getDataAdmissaoFormated() {

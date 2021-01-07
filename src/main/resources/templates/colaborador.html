@@ -1,34 +1,55 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Colaborador</title>
-</head>
-<body style="text-align: center; margin-top: 50px;" th:object="${colaborador}">
-	<h1 th:if="${usuario} == 'master'">Usuário Master</h1>
-	<h1 th:if="${usuario} == 'colaborador'">Usuário Colaborador</h1>
-	<br />
- 	<div align="center"><table border="1">
-		<tr>
-			<th>CPF</th>
-			<th>NOME</th>
-		</tr>
-		<tr>
-			<td th:text="${colaborador.cpf}"></td>
-			<td th:text="${colaborador.nome}"></td>
-		</tr>
-	</table></div>
-	<br />
-	<div align="center">
-	<form method="post" th:action="@{holerite/visualizar}">
-		<input type="hidden" name="idColaborador" th:value="${colaborador.idColaborador.toString()}">
-		<input type="hidden" name="idEmpresa" th:value="${empresa.idEmpresa.toString()}">
-		<select name="idCompetencia">
-			<option value="0" selected="selected">Escolha a competência</option>
-			<option th:each="competencia : ${competencias}" th:value="${competencia.idCompetencia}" th:text="${competencia.mes} + '/' + ${competencia.ano}"></option>
-		</select>
-		<input type="submit" value="Buscar Holerite">
-	</form>
-	</div>
-</body>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<div th:replace="header :: header"></div>
+	<body th:object="${colaborador}" onload="onloadUsuario();">
+		<table id="header">
+			<tr>
+				<td>&nbsp;</td>
+				<td id="avatar">Usuário<br />
+				<img id="icone" class="usuario" th:src="@{/images/icone_usuario.png}"></td>
+				<td id="infos"><table id="infos">
+					<tr>
+						<td>Nome<br />
+						<input id="nome" type="text" th:value="${colaborador.nome}" disabled="disabled" /></td>
+						<td>CPF<br />
+						<input id="cpf" type="text" th:value="${colaborador.cpf}" disabled="disabled" /></td>
+						<td id="sair"><img id="sair" th:src="@{/images/btn_sair.png}" th:onclick="'location.href=\'' + @{/logout} + '\';'" /></td>
+					</tr>
+				</table></td>
+			</tr>
+		</table>
+		<form method="post" th:action="@{holerite/emitir}" target="_blank">
+		<input type="hidden" name="idColaborador" th:value="${colaborador.idColaborador.toString()}" />
+		<input type="hidden" name="idEmpresa" th:value="${empresa.idEmpresa.toString()}" />
+		<input type="hidden" name="emitir" value="true" />
+		<table id="holerite">
+			<tr>
+				<td style="width: 260px;">&nbsp;</td>
+				<td><img id="icone" class="calendario" th:src="@{/images/icone_calendario.png}" /><br />
+				<img id="mesAno" th:src="@{/images/cbx_mesano.png}" /><br />
+				<select id="competencia" name="idCompetencia" size="6" onchange="enableRecibo(document.getElementById(this.value).getAttribute('recibos'))">
+					<option th:id="${competencia.idCompetencia}"
+							th:each="competencia : ${competencias}" 
+							th:value="${competencia.idCompetencia}"
+							th:recibos="${competencia.recibosAsText}"
+							th:text="${competencia.mes} + '/' + ${competencia.ano}"
+							onclick="enableRecibo(this.getAttribute('recibos'));"></option>
+				</select></td>
+				<td><img id="icone" class="recibo" th:src="@{/images/icone_recibo.png}" /><br />
+					<img id="recibo" th:src="@{/images/cbx_recibo.png}" /><br />
+					<select name="tipoRecibo" size="6">
+					<option th:each="tipoRecibo : ${tiposRecibo}" 
+							th:id="${tipoRecibo}"
+							th:value="${tipoRecibo}"
+							th:text="${tipoRecibo.descricao}"></option>
+				</select></td>
+				<td id="emitir"><img id="icone" class="emitir" th:src="@{/images/icone_emitir.png}" /><br />
+				<!-- <input type="image" th:src="@{/images/btn_emitir.png}" onclick="alert(document.getElementById('FP').value);"> -->
+				<input type="image" th:src="@{/images/btn_emitir.png}" /></td>
+			</tr>
+		</table>
+		</form>
+	</body>
 </html>

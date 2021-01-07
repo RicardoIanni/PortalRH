@@ -6,6 +6,7 @@ import org.tempuri.ExecutarComandoResponseExecutarComandoResult;
 import org.w3c.dom.Document;
 
 import br.com.ricardoianni.domain.employee.Colaborador;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;
 import br.com.ricardoianni.util.XMLUtils;
 import lombok.Data;
 
@@ -32,8 +33,8 @@ public class WebServiceClient {
 
 	}
 	
-	public Document webServiceHolerite(Colaborador colaborador, String mes, String ano) {
-		String comando = "XMLHolerite:Exec('" + colaborador.getIdFunc() + "', '" + mes + "', '" + ano + "')";
+	public Document webServiceHolerite(Colaborador colaborador, String mes, String ano, TipoRecibo tipoRecibo) {
+		String comando = "XMLHolerite:Exec('" + colaborador.getIdFunc() + "', '" + mes + "', '" + ano + "', '" + tipoRecibo.name() + "')";
 		ExecutarComandoResponseExecutarComandoResult retorno;
 		Document xmlDoc = null;
 		
@@ -78,6 +79,27 @@ public class WebServiceClient {
 		} else {
 			comando = "XMLColab:Exec(\"" + empresaCodigo + "\")";
 		}
+		
+		ExecutarComandoResponseExecutarComandoResult retorno;
+		Document xmlDoc = null;
+		
+		try {
+			retorno = webService.executarComando(comando, costumerID, username, password);
+			
+			xmlDoc = XMLUtils.convertRetornoStringtoXML(retorno.get_any()[0].getAsString());
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return xmlDoc;
+	}
+	
+	public Document webServiceCompetencias(String colaboradorIdFunc) {
+		String comando = "";
+		
+		comando = "XMLCompet:Exec(\"" + colaboradorIdFunc + "\")";
 		
 		ExecutarComandoResponseExecutarComandoResult retorno;
 		Document xmlDoc = null;

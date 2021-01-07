@@ -23,6 +23,7 @@ import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.domain.employee.Competencia;
 import br.com.ricardoianni.domain.holerite.Holerite;
 import br.com.ricardoianni.domain.holerite.HoleriteException;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
 @Controller
@@ -38,26 +39,53 @@ public class HoleriteController {
 	@Autowired
 	private HoleriteService holeriteService;
 	
-	
 	@PostMapping(path = "/visualizar")
 	public String holeriteView(	@RequestParam(name = "idColaborador") Integer idColaborador,
 								@RequestParam(name = "idEmpresa") Integer idEmpresa,
-								@RequestParam(name = "idCompetencia") Integer idCompetencia, 
-								Model model) throws HoleriteException {
+								@RequestParam(name = "idCompetencia") Integer idCompetencia,
+								@RequestParam(name = "tipoRecibo") TipoRecibo tipoRecibo,
+								Model model)  throws HoleriteException {
 		Colaborador colaborador = colaboradorService.colaboradorSearchID(idColaborador);
 		Empresa empresa = empresaService.empresaSearchID(idEmpresa);
 		Competencia competencia = colaboradorService.competenciaSearchID(idCompetencia);
 		
+		Holerite holerite = holeriteLoad(colaborador, empresa, competencia, tipoRecibo);
+		
+		model.addAttribute("holerite", holerite);
+
+		return "preview";
+	}
+	
+	
+	@PostMapping(path = "/emitir", produces = "application/pdf")
+	public ResponseEntity<InputStreamResource> holeritePrint(	@RequestParam(name = "idColaborador") Integer idColaborador,
+																@RequestParam(name = "idEmpresa") Integer idEmpresa,
+																@RequestParam(name = "idCompetencia") Integer idCompetencia,
+																@RequestParam(name = "tipoRecibo") TipoRecibo tipoRecibo,
+																Model model)  throws HoleriteException {
+		Colaborador colaborador = colaboradorService.colaboradorSearchID(idColaborador);
+		Empresa empresa = empresaService.empresaSearchID(idEmpresa);
+		Competencia competencia = colaboradorService.competenciaSearchID(idCompetencia);
+		
+		Holerite holerite = holeriteLoad(colaborador, empresa, competencia, tipoRecibo);
+		
+		return holeritePDF(holerite);
+	}
+	
+	public Holerite holeriteLoad(	Colaborador colaborador, 
+									Empresa empresa, 
+									Competencia competencia,
+									TipoRecibo tipoRecibo) throws HoleriteException {
 		String mes = competencia.getMes();
 		String ano = competencia.getAno();
 		
-		Holerite holerite = holeriteService.holeriteSearch(colaborador, empresa, mes, ano);
+		Holerite holerite = holeriteService.holeriteSearch(colaborador, empresa, mes, ano, tipoRecibo);
 		
 		if (holerite == null) {
 			Document xmlDoc = null;
 			
 			try {
-				xmlDoc = holeriteService.holeriteCarregar(colaborador, empresa, mes, ano);
+				xmlDoc = holeriteService.holeriteCarregar(colaborador, empresa, mes, ano, tipoRecibo);
 			} catch (WebServiceClientException e) {
 				// TODO: Retorno com mensagem de erro ao conectar no WebService
 				e.printStackTrace();
@@ -66,23 +94,21 @@ public class HoleriteController {
 			if (xmlDoc == null) {
 				throw new HoleriteException("Erro ao carregar o Holerite do WebService");
 			} else {
-				holerite = holeriteService.holeriteCriar(xmlDoc, colaborador);
+				holerite = holeriteService.holeriteCriar(xmlDoc);
+				holerite.setColaboradorHolerite(colaborador);
+				holerite.setEmpresaHolerite(empresa);
 				holerite.setMes(mes);
 				holerite.setAno(ano);
+				holerite.setTipoRecibo(tipoRecibo);
 				holeriteService.holeriteGravar(holerite);
 			}
-			
 		}
 		
-		model.addAttribute("holerite", holerite);
-		
-		return "preview";
+		return holerite;
 	}
-	
-	@PostMapping(path = "/pdf", produces = "application/pdf")
-	public ResponseEntity<InputStreamResource> holeritePDF(	@RequestParam(name = "idHolerite") Integer idHolerite) {
+
+	public ResponseEntity<InputStreamResource> holeritePDF(Holerite holerite) {
 		
-		Holerite holerite = holeriteService.holeriteSearchID(idHolerite);
 		String filename = holerite.getColaboradorHolerite().getIdFunc() + holerite.getAno() + holerite.getMes() + ".pdf";
 		
 		PDFDocument pdf = new PDFDocument();
@@ -98,5 +124,4 @@ public class HoleriteController {
                 .body(new InputStreamResource(byteInputStreamPDF));
         
 	}
-	
 }

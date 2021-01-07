@@ -215,6 +215,19 @@ public class PDFDocument {
 		
 		HoleritePagamento holeritePagamento;
 		
+		if (holeritePagamentos.size() == 0) {
+			
+			cellCode.setPhrase(new Phrase("", standard));
+			cellDescription.setPhrase(new Phrase("", standard));
+			cellReference.setPhrase(new Phrase("", standard));
+			cellValue.setPhrase(new Phrase("", standard));
+			
+			pagamentos.addCell(cellCode);
+			pagamentos.addCell(cellDescription);
+			pagamentos.addCell(cellReference);
+			pagamentos.addCell(cellValue);
+		}
+		
 		for (int i = 0; i < holeritePagamentos.size(); i++) {
 			holeritePagamento = holeritePagamentos.get(i);
 			

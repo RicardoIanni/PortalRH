@@ -18,6 +18,7 @@ import br.com.ricardoianni.domain.holerite.HoleriteDescontoRepository;
 import br.com.ricardoianni.domain.holerite.HoleriteRepository;
 import br.com.ricardoianni.domain.holerite.HoleriteVencimento;
 import br.com.ricardoianni.domain.holerite.HoleriteVencimentoRepository;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;
 import br.com.ricardoianni.util.XMLUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClient;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
@@ -39,12 +40,16 @@ public class HoleriteService {
 		return holeriteRepository.findByIdHolerite(idHolerite);
 	}
 
-	public Holerite holeriteSearch(Colaborador colaborador, Empresa empresa, String mes, String ano) {
+	public Holerite holeriteSearch(Colaborador colaborador, Empresa empresa, String mes, String ano, TipoRecibo tipoRecibo) {
 		
-		return holeriteRepository.findByColaboradorHoleriteAndEmpresaHoleriteAndMesAndAno(colaborador, empresa, mes, ano);
+		return holeriteRepository.findByColaboradorHoleriteAndEmpresaHoleriteAndMesAndAnoAndTipoRecibo(colaborador, empresa, mes, ano, tipoRecibo);
 	}
 	
-	public Document holeriteCarregar(Colaborador colaborador, Empresa empresa, String mes, String ano) throws WebServiceClientException {
+	public Document holeriteCarregar(	Colaborador colaborador, 
+										Empresa empresa, 
+										String mes, 
+										String ano,
+										TipoRecibo tipoRecibo) throws WebServiceClientException {
 		WebServiceClient webService = new WebServiceClient();
 		
 		String customerID = empresa.getClienteEmpresa().getCustomerID();
@@ -58,15 +63,14 @@ public class HoleriteService {
 		
 		webService.webServiceStart(endPoint);
 		
-		return webService.webServiceHolerite(colaborador, mes, ano);
+		return webService.webServiceHolerite(colaborador, mes, ano, tipoRecibo);
 		
 	}
 	
 	@Transactional
-	public Holerite holeriteCriar(Document xmlDoc, Colaborador colaborador) {
+	public Holerite holeriteCriar(Document xmlDoc) {
 		Holerite holerite = new Holerite();
 
-		holerite.setColaboradorHolerite(colaborador);
 		holerite.setDataAdmissao(XMLUtils.convertContextToDate(xmlDoc, "dt_admissao"));
 		holerite.setContrato(XMLUtils.getTagValue(xmlDoc, "contrato"));
 		holerite.setFuncao(XMLUtils.getTagValue(xmlDoc, "funcao"));
@@ -83,10 +87,6 @@ public class HoleriteService {
 		holerite.setSalarioIRRF(XMLUtils.convertContextToBigDecimal(xmlDoc, "baseirrf"));
 		holerite.setFaixaIRRF(XMLUtils.convertContextToBigDecimal(xmlDoc, "faixairrf"));
 		
-		Empresa empresa = colaborador.getEmpresasColaborador().get(0);
-		
-		holerite.setEmpresaHolerite(empresa);
-		 		  
 		NodeList vencimentos = XMLUtils.getTagChildNodeList(xmlDoc, "vencimentos");
 		
 		List<HoleriteVencimento> holeriteVencimentos = new ArrayList<>(vencimentos.getLength());

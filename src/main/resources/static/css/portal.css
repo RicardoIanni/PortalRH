@@ -1,12 +1,18 @@
 @charset "UTF-8";
 
-body#login {
+body {
 	text-align: left;
-	background-image: url(/images/fundo01.jpg);
+	margin-top: 0px;
+	background-image: url(/images/fundo02.jpg);
 	background-repeat: no-repeat;
+	background-attachment: fixed;
 	background-position: top center;
-	background-size: 75%;
+	background-size: 1040px;
 	background-color: #233543;
+}
+
+body#login {
+	background-image: url(/images/fundo01.jpg);
 }
 
 body#login table {
@@ -42,6 +48,60 @@ table#login td {
 	font-size: 5mm;
 }
 
+table#header, table#holerite {
+	width: 1040px;
+	height: 192px;
+	border-spacing: 0px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table#header td#avatar {
+	width: 228px;
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	font-family: Arial;
+	font-size: 6mm;
+	font-weight: bold;
+	padding-right: 8px;
+}
+
+table#header td#infos {
+	width: 771px;
+	text-align: left;
+	vertical-align: bottom;
+	padding-bottom: 20px;
+	color: white;
+	font-family: Arial;
+	font-size: 5mm;
+}
+
+table#infos {
+	margin-left: 10px;
+	border-spacing: 20px;
+}
+
+table#infos td#sair {
+	padding-left: 20px;
+	vertical-align: bottom;
+	margin-bottom: 0px;
+}
+
+table#infos input {
+	border: none;
+	height: 25px;
+	padding-left: 5px;
+}
+
+table#holerite {
+	margin-top: 80px;
+}
+
+table#holerite td {
+	text-align: center;
+}
+
 td#usuario {
 	padding-top: 20px;
 	height: 30%
@@ -50,6 +110,13 @@ td#usuario {
 td#senha {
 	padding-top: 12px;
 	height: 70%
+}
+
+td#emitir {
+	background-image: url(/images/fundo_emitir.png);
+	background-repeat: repeat-y;
+	background-position: center;
+	
 }
 
 input#login {
@@ -74,4 +141,43 @@ div#loginError {
 	font-family: Arial;
 	font-size: 4mm;
 	color: red;
+}
+
+img#icone {
+	width: 75px;
+}
+
+.usuario {
+	margin-top: 5px;
+}
+
+.calendario,
+.recibo,
+.emitir {
+	margin-bottom: 5px;
+}
+
+img#sair {
+	height: 40px;
+	margin-bottom: 0ṕx;
+	margin-bottom: -6px;
+}
+
+img#mesAno {
+	margin-bottom: -7px;
+	height: 23px;
+	position: relative;
+	z-index: 1;
+}
+
+img#recibo {
+	margin-bottom: -7px;
+	height: 23px;
+	position: relative;
+	z-index: 1;
+}
+
+select { 
+	width: 131px;
+	border: 1px solid #2d4369;
 }

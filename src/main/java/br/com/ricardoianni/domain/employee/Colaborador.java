@@ -57,7 +57,7 @@ public class Colaborador extends Usuario {
 	@OneToMany(mappedBy = "colaboradorHolerite")
 	private List<Holerite> holerites = new ArrayList<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(	name = "colaborador_empresa",
 				joinColumns = @JoinColumn(name = "idcolaborador"),
 				inverseJoinColumns = @JoinColumn(name = "idempresa") )

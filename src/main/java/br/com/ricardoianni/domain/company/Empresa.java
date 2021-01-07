@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,7 +49,7 @@ public class Empresa implements Serializable {
 	@JoinColumn(name = "idcliente")
 	private Cliente clienteEmpresa;
 
-	@ManyToMany(mappedBy = "empresasColaborador")
+	@ManyToMany(mappedBy = "empresasColaborador", fetch = FetchType.EAGER)
 	private List<Colaborador> colaboradoresEmpresa = new ArrayList<>(0);
 	
 }

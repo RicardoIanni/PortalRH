@@ -7,10 +7,11 @@ import br.com.ricardoianni.domain.employee.Colaborador;
 
 public interface HoleriteRepository extends JpaRepository<Holerite, Integer> {
 
-	public Holerite findByColaboradorHoleriteAndEmpresaHoleriteAndMesAndAno(Colaborador colaboradorHolerite,
-																			Empresa empresaHolerite,
-																			String mes, 
-																			String ano);
+	public Holerite findByColaboradorHoleriteAndEmpresaHoleriteAndMesAndAnoAndTipoRecibo(Colaborador colaboradorHolerite,
+																						 Empresa empresaHolerite,
+																						 String mes, 
+																						 String ano,
+																						 TipoRecibo tipoRecibo);
 	
 	public Holerite findByIdHolerite(Integer idHolerite);
 
