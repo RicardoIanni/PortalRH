@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<div th:replace="header :: header"></div>
+	<body th:id="${bodyId}">
+		<table id="header">
+			<tr>
+				<td>&nbsp;</td>
+				<td id="avatar"><span th:text="'Usuário ' + ${bodyId}"></span><br />
+				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
+				<td id="infos"><table id="infos">
+					<tr>
+						<td>Nome<br />
+						<input id="nome" type="text" th:value="${usuario.nome}" disabled="disabled" /></td>
+						<td>Nickname<br />
+						<input id="nome" type="text" th:value="${usuario.nickname}" disabled="disabled" /></td>
+						<td id="sair"><img id="sair" th:src="@{/images/} + 'btn_sair_' + ${bodyId} + '.png'" th:onclick="'location.href=\'' + @{/logout} + '\';'" /></td>
+					</tr>
+				</table></td>
+			</tr>
+		</table>
+		<form method="post" th:object="${cliente}" th:action="@{/master/cliente/save}">
+		<table id="inc_cli">
+			<tr>
+				<td id="label"><label for="nome">Nome:</label></td>
+				<td><input id="nome" type="text" th:field="*{nome}"></td>
+			</tr>
+			<tr>
+				<td id="label"><label for="customerID">Customer ID:</label></td>
+				<td><input id="customerID" type="text" th:field="*{customerID}"></td>
+			</tr>
+			<tr>
+				<td id="label"><label for="usuario">Usuário Padrão:</label></td>
+				<td><input id="usuario" type="text" th:field="*{username}"></td>
+			</tr>
+			<tr>
+				<td id="label"><label for="senha">Password:</label></td>
+				<td><input id="senha" type="password" th:field="*{password}"></td>
+			</tr>
+			<tr>
+				<td id="label"><label>Endpoint:</label></td>
+				<td><input id="endpoint" type="text" th:field="*{endpoint}"></td>
+			</tr>
+		</table>
+		<table id="list_cli_inc">
+			<tr>
+				<td id="inc_cli">
+					<input id="continuar" type="image" 
+						   th:src="@{/images/} + 'btn_continuar_' + ${bodyId} + '.png'">
+				</td>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

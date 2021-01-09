@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<div th:replace="header :: header"></div>
+	<body th:id="${bodyId}" style="text-align: center; margin-top: 50px;">
+		<h1>Usuário Master</h1>
+		<br />
+		<div th:if="${clientes.size() > 0}" align="center">
+		<table border="1">
+			<tr>
+				<th>Nome</th>
+				<th>Customer ID</th>
+				<th>Usuário Padrão</th>
+			</tr>
+			<tr th:each="cliente : ${clientes}">
+				<td><a th:href="@{cliente/details} + '?idcliente=' + ${cliente.idCliente}" th:text="${cliente.nome}"></a></td>
+				<td th:text="${cliente.customerID}"></td>
+				<td th:text="${cliente.username}"></td>
+			</tr>
+		</table>
+		<br />
+		</div>
+		<div th:if="${!msgError.isBlank() && !msgError.isEmpty()}">
+			<span th:text="${msgError}" style="color: red;"></span>
+			<br />
+		</div>
+		<form method="post" th:object="${cliente}" th:action="@{/master/cliente/save}">
+			<label for="nome">NOME:</label> <input id="nome" type="text" th:field="*{nome}"><br />
+			<br />
+			<label for="customerID">CUSTOMER ID:</label> <input id="customerID" type="text" th:field="*{customerID}"><br />
+			<br />
+			<label for="usuario">USUARIO PADRÃO:</label> <input id="usuario" type="text" th:field="*{username}"><br />
+			<br />
+			<label for="senha">PASSWORD:</label>	<input id="senha" type="password" th:field="*{password}"><br />
+			<br />
+			<label>ENDPOINT:</label> <input id="endpoint" type="text" th:field="*{endpoint}"><br />
+			<br />
+			<input type="submit" value="Incluir Cliente">
+		</form>
+	</body>
+</html>

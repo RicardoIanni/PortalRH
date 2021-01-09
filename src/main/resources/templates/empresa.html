@@ -1,39 +1,58 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 	<div th:replace="header :: header"></div>
-	<body style="text-align: center; margin-top: 50px;" th:object="${empresa}">
-		<h1>Usuário Master</h1>
-		<br />
-		<div align="center"><table border="1">
+	<body th:id="${bodyId}">
+		<table id="header">
 			<tr>
-				<th>CNPJ</th>
-				<th>RAZÃO SOCIAL</th>
-			</tr>
-			<tr>
-				<td th:text="${empresa.cnpj}"></td>
-				<td th:text="${empresa.razaoSocial}"></td>
+				<td>&nbsp;</td>
+				<td id="avatar"><span th:text="'Usuário ' + ${bodyId}"></span><br />
+				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
+				<td id="infos"><table id="infos">
+					<tr>
+						<td>Nome<br />
+						<input id="nome" type="text" th:value="${usuario.nome}" disabled="disabled" /></td>
+						<td>Nickname<br />
+						<input id="nome" type="text" th:value="${usuario.nickname}" disabled="disabled" /></td>
+						<td id="sair"><img id="sair" th:src="@{/images/} + 'btn_sair_' + ${bodyId} + '.png'" th:onclick="'location.href=\'' + @{/logout} + '\';'" /></td>
+					</tr>
+				</table>
+				<table id="empresa">
+					<tr>
+						<td>CNPJ<br />
+						<input id="CNPJ" type="text" th:value="${empresa.cnpj}" disabled="disabled" /></td>
+						<td>Razão Social<br />
+						<input id="razaoSocial" type="text" th:value="${empresa.razaoSocialCapitalized}" disabled="disabled" /></td>
+					</tr>
+				</table></td>
 			</tr>
 		</table>
-		<br />
-		</div>
-	 	<div th:if="${colaboradores.size() > 0}" align="center">
-		<table border="1">
-			<tr>
+	 	<table id="list_header">
+			<tr th:if="${colaboradores.size() == 0}">
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+			</tr>
+			<tr th:if="${colaboradores.size() > 0}">
 				<th>CPF</th>
-				<th>NOME</th>
-			</tr>
-			<tr th:each="colaborador : ${colaboradores}">
-				<td><a th:href="@{colab/} + '?idcolaborador=' + ${colaborador.idColaborador}" th:text="${colaborador.cpf}" /></td>
-				<td th:text="${colaborador.nome}"></td>
+				<th>Nome</th>
 			</tr>
 		</table>
-		<br />
+		<div id="list_colab">
+			<table id="list_empresa">
+				<tr id="body" th:each="colaborador : ${colaboradores}">
+					<td><a th:href="@{colab/} + '?idcolaborador=' + ${colaborador.idColaborador}" th:text="${colaborador.cpf}" /></td>
+					<td th:text="${colaborador.nome}"></td>
+				</tr>
+			</table>
 		</div>
-	 	<div align="center">
-		<form method="post" th:action="@{colab/importar}">
-			<input type="hidden" name="idempresa" th:value="${empresa.idEmpresa.toString()}">
-			<input type="submit" value="Importar Colaboradores">
-		</form>
-		</div>
+		<table id="inc_colab">
+			<tr>
+				<td>
+					<form method="post" th:action="@{colab/importar}">
+						<input type="hidden" name="idempresa" th:value="${empresa.idEmpresa}">
+						<input id="continuar" type="image" 
+							   th:src="@{/images/} + 'btn_continuar_' + ${bodyId} + '.png'">
+					</form></td>
+			</tr>
+		</table>
 	</body>
 </html>

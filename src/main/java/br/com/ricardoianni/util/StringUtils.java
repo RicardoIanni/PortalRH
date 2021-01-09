@@ -25,12 +25,15 @@ public class StringUtils {
 	}
 	
 	public static String concatenate(Collection<String> strings) {
+		return concatenate(strings, ",");
+	}
+	
+	public static String concatenate(Collection<String> strings, String delimiter) {
 		if(strings == null || strings.size() == 0) {
 			return null;
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		String delimiter = ",";
 		boolean first = true;
 		
 		for (String string : strings) {
@@ -43,6 +46,27 @@ public class StringUtils {
 		}
 		
 		return sb.toString();
+	}
+	
+	public static String capatalize(String text) {
+		String[] words = text.split(" ");
+		String word;
+		
+		for (int i = 0; i < words.length; i++) {
+			word = words[i].toLowerCase();
+			
+			if ( i > 0 && (word.equals("de") || word.equals("da") || word.equals("do") ||
+				word.equals("em") || word.equals("na") || word.equals("no") || 
+				word.equals("para") || word.equals("pra") || word.equals("pro") || 
+				word.equals("por") || word.equals("e") || word.equals("a"))) {
+				words[i] = word;
+				continue;
+			}
+	
+			words[i] = word.substring(0, 1).toUpperCase() + word.substring(1);
+		}
+		
+		return concatenate(CollectionUtils.listOf(words), " ");
 	}
 	
 }

@@ -37,6 +37,8 @@ public class InsertData {
 			
 			masterUser.setUsername("hsolera");
 			masterUser.setPassword(StringUtils.encrypt("hsf"));
+			masterUser.setNickname("Humberto");
+			masterUser.setNome("Humberto Solera");
 			
 			masterUserRepository.save(masterUser);
 		}

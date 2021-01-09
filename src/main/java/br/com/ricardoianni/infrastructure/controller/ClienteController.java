@@ -20,7 +20,7 @@ import br.com.ricardoianni.webservice.client.WebServiceClient;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
 @Controller
-@RequestMapping(path = {"master/cliente", "/admin/cliente"})
+@RequestMapping(path = {"/master/cliente", "/admin/cliente"})
 public class ClienteController {
 
 	@Autowired
@@ -64,7 +64,10 @@ public class ClienteController {
 	}
 	
 	@GetMapping(path = "/details")
-	public String clienteDetalhes(@RequestParam(name = "idcliente") Integer idCliente, Model model) {
+	public String clienteDetalhes(	@RequestParam(name = "idcliente") Integer idCliente,
+									Model model) {
+		ControllerHelper.setLoggedUser(model);
+		
 		Cliente cliente = clienteRepository.findByIdCliente(idCliente);
 		List<Empresa> empresas = empresaRepository.findByClienteEmpresa(cliente);
 		
@@ -72,5 +75,14 @@ public class ClienteController {
 		model.addAttribute("empresas", empresas);
 		
 		return "cli_details";
+	}
+	
+	@GetMapping(path= "/incluir")
+	public String clienteIncluir(Model model) {
+		ControllerHelper.setLoggedUser(model);
+		
+		model.addAttribute("cliente", new Cliente());
+		
+		return "cli_add";
 	}
 }

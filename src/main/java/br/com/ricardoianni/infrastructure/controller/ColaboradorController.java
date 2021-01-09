@@ -12,16 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.ricardoianni.application.service.ColaboradorService;
-import br.com.ricardoianni.domain.administrator.Administrador;
 import br.com.ricardoianni.domain.company.Empresa;
 import br.com.ricardoianni.domain.company.EmpresaRepository;
 import br.com.ricardoianni.domain.employee.Colaborador;
 import br.com.ricardoianni.domain.employee.Competencia;
-import br.com.ricardoianni.domain.holerite.TipoRecibo;
-import br.com.ricardoianni.domain.masteruser.MasterUser;
-import br.com.ricardoianni.domain.user.Usuario;
+import br.com.ricardoianni.domain.holerite.TipoRecibo;import br.com.ricardoianni.domain.user.Usuario;
 import br.com.ricardoianni.util.CollectionUtils;
-import br.com.ricardoianni.util.SecurityUtils;
 import br.com.ricardoianni.webservice.client.WebServiceClientException;
 
 @Controller
@@ -36,15 +32,7 @@ public class ColaboradorController {
 
 	@GetMapping(path = {"/", "/home"})
 	public String employeeUserLogged(@RequestParam(name = "idcolaborador", required = false) Integer idColaborador, Model model) {
-		Usuario usuario = SecurityUtils.getUsuario();
-
-		if (usuario instanceof MasterUser) {
-			model.addAttribute("usuario", "master");
-		} else if (usuario instanceof Administrador) {
-			model.addAttribute("usuario", "administrador");
-		} else if (usuario instanceof Colaborador) {
-			model.addAttribute("usuario", "colaborador");
-		}
+		Usuario usuario = ControllerHelper.setLoggedUser(model);
 		
 		Colaborador colaborador;
 		

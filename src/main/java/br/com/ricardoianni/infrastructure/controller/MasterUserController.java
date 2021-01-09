@@ -20,11 +20,18 @@ public class MasterUserController {
 	
 	@GetMapping(path = "/home")
 	public String masterUserLogged(Model model) {
+
+		ControllerHelper.setLoggedUser(model);
+		
 		List<Cliente> clientes = clienteRepository.findAll();
 		
 		model.addAttribute("msgError", "");
-		model.addAttribute("cliente", new Cliente());
 		model.addAttribute("clientes", clientes);
+		
+		if (clientes.size() == 0) {
+			model.addAttribute("cliente", new Cliente());
+			return "cli_add";
+		}
 		
 		return "cliente";
 	}

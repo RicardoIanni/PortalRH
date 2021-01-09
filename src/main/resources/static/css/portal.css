@@ -15,6 +15,10 @@ body#login {
 	background-image: url(/images/fundo01.jpg);
 }
 
+body#Master {
+	background-image: url(/images/fundo03.jpg);
+}
+
 body#login table {
 	border-spacing: 0px;
 	width: 318px;
@@ -28,16 +32,25 @@ body#login table#submit {
 	margin-top: 25px;
 }
 
-body#login table#submit input[type=image] {
-	width: 135px;
-}
-
 body#login table#login {
 	background-image: url(/images/fundo_login.png);
 	background-repeat: no-repeat;
 	background-size: 100%;
 	height: 195px;
 	top: 170px;
+}
+
+body#Master table#header td#infos {
+	padding-top: 0px;
+	vertical-align: top;
+}
+
+body#Master table#infos input,
+body#Master table#cliente input,
+body#Master table#empresa input {
+	color: #362904;
+	font-family: Arial;
+	font-size: 4mm;
 }
 	
 table#login td {
@@ -46,6 +59,10 @@ table#login td {
 	text-align: left;
 	font-family: Arial;
 	font-size: 5mm;
+}
+
+body#Master table#header {
+	height: 206px;
 }
 
 table#header, table#holerite {
@@ -77,21 +94,47 @@ table#header td#infos {
 	font-size: 5mm;
 }
 
-table#infos {
+table#infos,
+table#cliente,
+table#empresa {
+	width: 100%;
 	margin-left: 10px;
 	border-spacing: 20px;
 }
 
 table#infos td#sair {
-	padding-left: 20px;
+	padding-right: 20px;
 	vertical-align: bottom;
+	text-align: right;
 	margin-bottom: 0px;
 }
 
-table#infos input {
+table#infos input,
+table#cliente input,
+table#empresa input {
 	border: none;
 	height: 25px;
 	padding-left: 5px;
+}
+
+table#infos input {
+	width: 250px;
+}
+
+table#empresa input#CNPJ {
+	width: 150px;
+}
+
+table#empresa input#razaoSocial {
+	width: 450px;
+}
+
+table#cliente input {
+	width: 200px;
+}
+
+body#Master input {
+	background-color: #f4ebd9;
 }
 
 table#holerite {
@@ -100,6 +143,172 @@ table#holerite {
 
 table#holerite td {
 	text-align: center;
+}
+
+table#inc_cli,
+table#list_header_cli,
+table#list_cli,
+table#list_cli_inc,
+table#list_header,
+table#list_empresa,
+table#list_colab,
+table#inc_empresa,
+table#inc_colab {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table#inc_cli {
+	padding-top: 55px;
+}
+
+table#inc_cli td {
+	padding-bottom: 20px;
+}
+
+table#inc_cli td#label {
+	text-align: right;
+	padding-right: 10px;
+}
+
+table#inc_cli td#continuar,
+table#list_cli_inc td#inc_cli,
+table#list_cli td#continuar,
+table#inc_empresa td,
+table#inc_colab td {
+	text-align: center;
+}
+
+table#inc_cli td#continuar {
+	padding-top: 28px;
+}
+
+table#list_cli_inc td#inc_cli,
+table#inc_empresa td,
+table#inc_colab td {
+	padding-top: 22px;
+}
+
+table#inc_cli label {
+	color: #362904;
+	font-family: Arial;
+	font-size: 5mm;
+}
+
+table#inc_cli input {
+	border: none;
+	height: 25px;
+	color: #362904;
+	font-family: Arial;
+	font-size: 5mm;
+}
+table#list_header_cli,
+table#list_cli,
+table#inc_cli {
+	width: 500px;
+}
+
+div#list_cli {
+	width: 512px;
+	margin-left: auto;
+	margin-right: auto;
+	height: 250px;
+	overflow: auto;
+}
+
+table#list_header_cli,
+table#list_header {
+	padding-top: 30px;
+}
+
+table#list_header,
+table#list_empresa,
+table#list_colab,
+table#inc_empresa,
+table#inc_colab {
+	width: 570px;
+}
+
+div#list_empresa,
+div#list_colab {
+	width: 582px;
+	margin-left: auto;
+	margin-right: auto;
+	height: 250px;
+	overflow: auto;
+}
+
+table#list_header_cli th,
+table#list_cli th,
+table#list_header th {
+	text-align: center;
+	color: #362904;
+	font-family: Arial;
+	font-size: 5mm;
+	background-color: transparent;
+}
+
+table#list_cli tr:nth-child(even)#body,
+table#list_empresa tr:nth-child(even)#body,
+table#list_colab tr:nth-child(even)#body {
+	background-color: #f4ebd9;
+	color: #7b6528;
+}
+
+table#list_cli tr:nth-child(even)#body a,
+table#list_empresa tr:nth-child(even)#body a,
+table#list_colab tr:nth-child(even)#body a {
+	color: #7b6528;
+	text-decoration: none;
+}
+
+table#list_cli tr:nth-child(even)#body a:hover,
+table#list_empresa tr:nth-child(even)#body a:hover,
+table#list_colab tr:nth-child(even)#body a:hover {
+	color: #362904;
+	text-decoration: none;
+}
+
+table#list_cli tr:nth-child(odd)#body,
+table#list_empresa tr:nth-child(odd)#body,
+table#list_colab tr:nth-child(odd)#body {
+	background-color: #7b6528;
+	color: #f4ebd9;
+}
+
+table#list_cli tr:nth-child(odd)#body a,
+table#list_empresa tr:nth-child(odd)#body a,
+table#list_colab tr:nth-child(odd)#body a {
+	color: #f4ebd9;
+	text-decoration: none;	
+}
+
+table#list_cli tr:nth-child(odd)#body a:hover,
+table#list_empresa tr:nth-child(odd)#body a:hover,
+table#list_colab tr:nth-child(odd)#body a:hover {
+	color: #362904;
+	text-decoration: none;	
+}
+
+table#list_cli td,
+table#list_empresa td,
+table#list_colab td {
+	padding: 5px 5px 5px 5px;
+}
+
+th#nome_cli,
+td#nome_cli {
+	width: 170px;
+}
+
+th#customer_id,
+td#customer_id {
+	width: 170px;
+}
+
+th#user_default,
+td#user_default {
+	width: 160px;
 }
 
 td#usuario {
@@ -130,6 +339,11 @@ input#login {
 	padding-left: 8px;
 	font-family: Arial;
 	font-size: 28px;
+}
+
+input[type=image]#continuar {
+	background-color: transparent;
+	width: 135px;
 }
 
 div#loginError {

@@ -37,6 +37,8 @@ public class EmpresaController {
 	
 	@GetMapping(path = "/")
 	public String empresaDetails(@RequestParam("idempresa") Integer idEmpresa, Model model) {
+		ControllerHelper.setLoggedUser(model);
+		
 		Empresa empresa = empresaRepository.findByIdEmpresa(idEmpresa);
 		List<Colaborador> colaboradores = colaboradorRepository.findByEmpresasColaborador_IdEmpresa(empresa.getIdEmpresa());
 		

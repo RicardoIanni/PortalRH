@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import br.com.ricardoianni.domain.address.Endereco;
 import br.com.ricardoianni.domain.customer.Cliente;
 import br.com.ricardoianni.domain.employee.Colaborador;
+import br.com.ricardoianni.util.StringUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,10 @@ public class Empresa implements Serializable {
 	private String codigo;
 	
 	private String razaoSocial;
+
+	public String getRazaoSocialCapitalized() {
+		return StringUtils.capatalize(razaoSocial);
+	}
 	
 	@ManyToOne
 	@JoinColumn(name = "idendereco")

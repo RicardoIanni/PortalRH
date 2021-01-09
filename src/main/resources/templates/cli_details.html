@@ -1,42 +1,60 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 	<div th:replace="header :: header"></div>
-	<body style="text-align: center; margin-top: 50px;" th:object="${cliente}">
-		<h1>Usuário Master</h1>
-		<br />
-		<div align="center"><table border="1">
+	<body th:id="${bodyId}">
+		<table id="header">
 			<tr>
-				<th>Nome</th>
-				<td th:text="${cliente.nome}"></td>
-				<th>Customer ID</th>
-				<td th:text="${cliente.customerID}"></td>
-				<th>Usuário Padrão</th>
-				<td th:text="${cliente.username}"></td>
-			</tr>
-			<tr>
-				<th>Endpoint</th>
-				<td colspan="5" th:text="${cliente.endpoint}"></td>
-			</tr>
-		</table></div>
-		<br />
-	 	<div th:if="${empresas.size() > 0}" align="center">
-		<table border="1">
-			<tr>
-				<th>CNPJ</th>
-				<th>RAZÃO SOCIAL</th>
-			</tr>
-			<tr th:each="empresa : ${empresas}">
-				<td><a th:href="@{empresa/} + '?idempresa=' + ${empresa.idEmpresa}" th:text="${empresa.cnpj}"></a></td>
-				<td th:text="${empresa.razaoSocial}"></td>
+				<td>&nbsp;</td>
+				<td id="avatar"><span th:text="'Usuário ' + ${bodyId}"></span><br />
+				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
+				<td id="infos"><table id="infos">
+					<tr>
+						<td>Nome<br />
+						<input id="nome" type="text" th:value="${usuario.nome}" disabled="disabled" /></td>
+						<td>Nickname<br />
+						<input id="nome" type="text" th:value="${usuario.nickname}" disabled="disabled" /></td>
+						<td id="sair"><img id="sair" th:src="@{/images/} + 'btn_sair_' + ${bodyId} + '.png'" th:onclick="'location.href=\'' + @{/logout} + '\';'" /></td>
+					</tr>
+				</table>
+				<table id="cliente">
+					<tr>
+						<td>Nome<br />
+						<input id="nome" type="text" th:value="${cliente.nome}" disabled="disabled" /></td>
+						<td>Customer ID<br />
+						<input id="nome" type="text" th:value="${cliente.customerID}" disabled="disabled" /></td>
+						<td>Usuário Padrão<br />
+						<input id="nome" type="text" th:value="${cliente.username}" disabled="disabled" /></td>
+					</tr>
+				</table></td>
 			</tr>
 		</table>
-		<br />
+	 	<table id="list_header">
+			<tr th:if="${empresas.size() == 0}">
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+			</tr>
+			<tr th:if="${empresas.size() > 0}">
+				<th>CNPJ</th>
+				<th>Razão Social</th>
+			</tr>
+		</table>
+		<div id="list_empresa">
+			<table id="list_empresa">
+				<tr id="body" th:each="empresa : ${empresas}">
+					<td><a th:href="@{empresa/} + '?idempresa=' + ${empresa.idEmpresa}" th:text="${empresa.cnpj}"></a></td>
+					<td th:text="${empresa.razaoSocialCapitalized}"></td>
+				</tr>
+			</table>
 		</div>
-	 	<div align="center">
-		<form method="post" th:action="@{empresa/importar}">
-			<input type="hidden" name="idcliente" th:value="${cliente.idCliente}">
-			<input type="submit" value="Importar Empresas">
-		</form>
-		</div>
+		<table id="inc_empresa">
+			<tr>
+				<td>
+					<form method="post" th:action="@{empresa/importar}">
+						<input type="hidden" name="idcliente" th:value="${cliente.idCliente}">
+						<input id="continuar" type="image" 
+							   th:src="@{/images/} + 'btn_continuar_' + ${bodyId} + '.png'">
+					</form></td>
+			</tr>
+		</table>
 	</body>
 </html>

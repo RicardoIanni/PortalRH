@@ -3,7 +3,7 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 	<div th:replace="header :: header"></div>
-	<body th:object="${colaborador}" onload="onloadUsuario();">
+	<body id="${bodyId}" th:object="${colaborador}" onload="onloadUsuario();">
 		<table id="header">
 			<tr>
 				<td>&nbsp;</td>
