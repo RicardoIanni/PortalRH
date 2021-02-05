@@ -78,8 +78,6 @@ public class ColaboradorService {
 			
 			colaborador.setUsername(cpf);
 			colaborador.setPassword(senha);
-			// TODO: Retirar a senha do campo nickname
-			colaborador.setNickname(senha);
 			colaborador.encryptPassword();
 			
 			colaborador.setIdFunc(XMLUtils.getTagValue(nodeChildList, "idfunc"));

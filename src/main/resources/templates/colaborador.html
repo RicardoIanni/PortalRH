@@ -3,19 +3,36 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 	<div th:replace="header :: header"></div>
-	<body id="${bodyId}" th:object="${colaborador}" onload="onloadUsuario();">
+	<body th:id="${bodyId}" th:object="${colaborador}" onload="onloadUsuario();">
 		<table id="header">
 			<tr>
 				<td>&nbsp;</td>
-				<td id="avatar">Usuário<br />
-				<img id="icone" class="usuario" th:src="@{/images/icone_usuario.png}"></td>
-				<td id="infos"><table id="infos">
+				<td id="avatar"><a href="javascript: history.go(-1)"><img th:if="${bodyId != 'Colaborador'}" th:src="@{/images/} + 'seta_voltar_' + ${bodyId} + '.png'"></a>
+				<span th:text="'Usuário ' + ${bodyId != 'Colaborador' ? bodyId : ''}"></span><br />
+				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
+				<td id="infos"><table th:if="${bodyId != 'Colaborador'}" id="infos">
 					<tr>
 						<td>Nome<br />
+						<input id="nome" type="text" th:value="${usuario.nome}" disabled="disabled" /></td>
+						<td>Nickname<br />
+						<input id="nome" type="text" th:value="${usuario.nickname}" disabled="disabled" /></td>
+						<td id="sair">
+							<img id="sair" th:src="@{/images/} + 'btn_sair_' + ${bodyId} + '.png'" 
+								 th:onclick="'location.href=\'' + @{/logout} + '\';'" />
+						</td>
+					</tr>
+				</table>
+				<table id="infos">
+					<tr>
+						<td><span th:text="${bodyId != 'Colaborador' ? 'Colaborador' : 'Nome'}"></span><br />
 						<input id="nome" type="text" th:value="${colaborador.nome}" disabled="disabled" /></td>
 						<td>CPF<br />
 						<input id="cpf" type="text" th:value="${colaborador.cpf}" disabled="disabled" /></td>
-						<td id="sair"><img id="sair" th:src="@{/images/btn_sair.png}" th:onclick="'location.href=\'' + @{/logout} + '\';'" /></td>
+						<td id="sair">
+							<img id="sair" th:src="@{/images/} + 'btn_sair_' + ${bodyId} + '.png'" 
+								 th:onclick="'location.href=\'' + @{/logout} + '\';'"
+								 th:style="'visibility:' + ${bodyId != 'Colaborador' ? 'hidden' : 'visible'} + ';'">
+						</td>
 					</tr>
 				</table></td>
 			</tr>
@@ -26,9 +43,9 @@
 		<input type="hidden" name="emitir" value="true" />
 		<table id="holerite">
 			<tr>
-				<td style="width: 260px;">&nbsp;</td>
-				<td><img id="icone" class="calendario" th:src="@{/images/icone_calendario.png}" /><br />
-				<img id="mesAno" th:src="@{/images/cbx_mesano.png}" /><br />
+				<td id="esquerda">&nbsp;</td>
+				<td id="mesAno"><img id="icone" class="calendario" th:src="@{/images/} + 'icone_calendario_' + ${bodyId} + '.png'" /><br />
+				<img id="mesAno" th:src="@{/images/} + 'cbx_mesano_' + ${bodyId} + '.png'" /><br />
 				<select id="competencia" name="idCompetencia" size="6" onchange="enableRecibo(document.getElementById(this.value).getAttribute('recibos'))">
 					<option th:id="${competencia.idCompetencia}"
 							th:each="competencia : ${competencias}" 
@@ -37,17 +54,16 @@
 							th:text="${competencia.mes} + '/' + ${competencia.ano}"
 							onclick="enableRecibo(this.getAttribute('recibos'));"></option>
 				</select></td>
-				<td><img id="icone" class="recibo" th:src="@{/images/icone_recibo.png}" /><br />
-					<img id="recibo" th:src="@{/images/cbx_recibo.png}" /><br />
+				<td id="recibo"><img id="icone" class="recibo" th:src="@{/images/} + 'icone_recibo_' + ${bodyId} + '.png'" /><br />
+					<img id="recibo" th:src="@{/images/} + 'cbx_recibo_' + ${bodyId} + '.png'" /><br />
 					<select name="tipoRecibo" size="6">
 					<option th:each="tipoRecibo : ${tiposRecibo}" 
 							th:id="${tipoRecibo}"
 							th:value="${tipoRecibo}"
 							th:text="${tipoRecibo.descricao}"></option>
 				</select></td>
-				<td id="emitir"><img id="icone" class="emitir" th:src="@{/images/icone_emitir.png}" /><br />
-				<!-- <input type="image" th:src="@{/images/btn_emitir.png}" onclick="alert(document.getElementById('FP').value);"> -->
-				<input type="image" th:src="@{/images/btn_emitir.png}" /></td>
+				<td id="emitir"><img id="icone" class="emitir" th:src="@{/images/} + 'icone_emitir_' + ${bodyId} + '.png'" /><br />
+				<input id="emitir" type="image" th:src="@{/images/} + 'btn_emitir_' + ${bodyId} + '.png'" /></td>
 			</tr>
 		</table>
 		</form>

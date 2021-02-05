@@ -145,6 +145,30 @@ table#holerite td {
 	text-align: center;
 }
 
+body#Colaborador table#holerite td#esquerda {
+	width: 260px;
+}
+
+body#Master table#holerite td#esquerda {
+	width: 217px;
+}
+
+body#Master table#holerite td#mesAno,
+body#Master table#holerite td#recibo {
+	width: 200px;
+}
+
+table#holerite td#emitir {
+	background-image: url(/images/fundo_emitir.png);
+	background-repeat: repeat-y;
+	background-position: center;
+}
+
+body#Master table#holerite td#emitir {
+	background: none;
+	padding-right: 207px;
+}
+
 table#inc_cli,
 table#list_header_cli,
 table#list_cli,
@@ -154,6 +178,8 @@ table#list_empresa,
 table#list_colab,
 table#inc_empresa,
 table#inc_colab {
+	font-family: Arial;
+	font-size: 4mm;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -321,13 +347,6 @@ td#senha {
 	height: 70%
 }
 
-td#emitir {
-	background-image: url(/images/fundo_emitir.png);
-	background-repeat: repeat-y;
-	background-position: center;
-	
-}
-
 input#login {
 	background-image: url(/images/fundo_input.png);
 	background-repeat: no-repeat;
@@ -341,9 +360,17 @@ input#login {
 	font-size: 28px;
 }
 
-input[type=image]#continuar {
+input[type=image]#continuar,
+input[type=image]#inc_cliente,
+input[type=image]#imp_empresa,
+input[type=image]#imp_colab {
 	background-color: transparent;
-	width: 135px;
+	height: 22px;
+}
+
+input[type=image]#emitir {
+	background-color: transparent;
+	height: 30px;
 }
 
 div#loginError {

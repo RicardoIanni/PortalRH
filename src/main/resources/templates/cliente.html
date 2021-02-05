@@ -5,7 +5,8 @@
 		<table id="header">
 			<tr>
 				<td>&nbsp;</td>
-				<td id="avatar"><span th:text="'Usuário ' + ${bodyId}"></span><br />
+				<td id="avatar"><a href="javascript: history.go(-1)"><img th:if="${bodyId != 'Colaborador'}" th:src="@{/images/} + 'seta_voltar_' + ${bodyId} + '.png'"></a>
+				<span th:text="'Usuário ' + ${bodyId}"></span><br />
 				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
 				<td id="infos"><table id="infos">
 					<tr>
@@ -38,8 +39,8 @@
 			<tr>
 				<td id="inc_cli">
 					<form method="get" th:action="@{cliente/incluir}">
-						<input id="continuar" type="image" 
-							   th:src="@{/images/} + 'btn_continuar_' + ${bodyId} + '.png'">
+						<input id="inc_cliente" type="image" 
+							   th:src="@{/images/} + 'btn_cliente_' + ${bodyId} + '.png'">
 					</form></td>
 			</tr>
 		</table>

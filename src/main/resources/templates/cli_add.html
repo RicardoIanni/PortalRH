@@ -5,7 +5,8 @@
 		<table id="header">
 			<tr>
 				<td>&nbsp;</td>
-				<td id="avatar"><span th:text="'Usuário ' + ${bodyId}"></span><br />
+				<td id="avatar"><a href="javascript: history.go(-1)"><img th:if="${bodyId != 'Colaborador'}" th:src="@{/images/} + 'seta_voltar_' + ${bodyId} + '.png'"></a>
+				<span th:text="'Usuário ' + ${bodyId}"></span><br />
 				<img id="icone" class="usuario" th:src="@{/images/} + 'icone_' + ${bodyId} + '.png'"></td>
 				<td id="infos"><table id="infos">
 					<tr>
